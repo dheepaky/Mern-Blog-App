@@ -1,20 +1,21 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, SchemaType } from "mongoose";
 
 const blogschema = new mongoose.Schema(
   {
     title: {
       type: String,
-      require: true,
+      required: true,
     },
     slug: {
       type: String,
-      require: true,
+      required: true,
     },
     img: {
       type: String,
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
     },
     content: {
       type: String,

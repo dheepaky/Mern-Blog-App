@@ -13,7 +13,7 @@ export default function Footer() {
             About
           </Link>
           <Link
-            to="/home"
+            to="/"
             className="flex items-center gap-1 cursor-pointer border-b-2 border-transparent hover:border-cyan-400 transition-colors duration-300">
             <MdOutlineHome size={18} />
             Home

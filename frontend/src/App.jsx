@@ -1,4 +1,4 @@
-import Blogs from "./components/Blogs";
+import Blog from "./components/Blog";
 import CreateBlog from "./components/CreateBlog";
 import CreateCategory from "./components/CreateCategory";
 import Footer from "./components/Footer";
@@ -9,6 +9,8 @@ import Signup from "./pages/Signup";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import ScrollToTop from "./pages/ScrollToTop";
+import BlogDetails from "./components/BlogDetails";
+import Categories from "./components/Categories";
 
 function App() {
   return (
@@ -17,8 +19,9 @@ function App() {
         <Header />
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Blogs />} />
-          <Route path="/home" element={<Blogs />} />
+          <Route path="/" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogDetails />} />
+          <Route path="/category/:id" element={<Categories />} />
           <Route path="/create-blog" element={<CreateBlog />} />
           <Route path="/create-category" element={<CreateCategory />} />
           <Route path="/login" element={<Login />} />

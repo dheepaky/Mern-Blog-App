@@ -1,16 +1,47 @@
+import axios from "axios";
 import { useState } from "react";
 
 export default function CreateBlog() {
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [img, setImage] = useState(null);
   const [category, setCategory] = useState("");
-  const [image, setImage] = useState(null);
+  const [content, setContent] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // For now, just log (later you’ll send to backend with axios/fetch)
-    console.log({ title, content, category, image });
+    try {
+      // Create form data object
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("content", content);
+      if (img) {
+        formData.append("img", img);
+      }
+
+      // Send to backend
+      const response = await axios.post(
+        "http://localhost:5000/api/blog/create-blog",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      console.log("Blog created:", response.data);
+
+      // Reset form after submit
+      setTitle("");
+      setImage(null);
+      setCategory("");
+      setContent("");
+    } catch (error) {
+      console.error(
+        "Error in CreateBlog",
+        error.response?.data || error.message
+      );
+    }
   };
 
   return (
@@ -39,8 +70,7 @@ export default function CreateBlog() {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
-            required>
+            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400">
             <option value="">Select a category</option>
             <option value="Technology">Technology</option>
             <option value="Lifestyle">Lifestyle</option>
@@ -55,7 +85,7 @@ export default function CreateBlog() {
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files[0])}
-            className="w-full"
+            className="w-fit border border-black"
           />
         </div>
 

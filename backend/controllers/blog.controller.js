@@ -1,16 +1,16 @@
+import categorymodel from "../models/category.model.js";
 import blogmodel from "../models/blog.model.js";
+import slugify from "slugify";
 
 export const createblog = async (req, res) => {
   try {
     const { title, img, category, content } = req.body;
-    const slug = title.toLowerCase().replace(/ /g, "-");
+    const slug = slugify(title.toLowerCase().replace(/ /g, "-"));
     const existingBlog = await blogmodel.findOne({ slug });
     if (existingBlog) {
-      return res
-        .status(400)
-        .json({
-          message: "Slug already exists. Please choose a different title.",
-        });
+      return res.status(400).json({
+        message: "Slug already exists. Please choose a different title.",
+      });
     }
     const blog = new blogmodel({
       title,
@@ -28,7 +28,7 @@ export const createblog = async (req, res) => {
 
 export const viewblog = async (req, res) => {
   try {
-    const blogs = await blogmodel.find();
+    const blogs = await blogmodel.find().sort({ createdAt: -1 });
     res.status(201).json(blogs);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -78,5 +78,27 @@ export const updateblog = async (req, res) => {
     res.status(200).json(blog);
   } catch (error) {
     res.status(404).json({ message: error.message });
+  }
+};
+
+// get blog by category id
+
+export const getpostbycategory = async (req, res) => {
+  try {
+    const categoryid = req.params.categoryid;
+    // validate
+    const categoryexist = await categorymodel.findById(categoryid);
+
+    if (!categoryexist) {
+      res.status(404).json({ message: "invalid category" });
+    }
+    // fetch post
+    const blogs = await blogmodel
+      .find({ category: categoryid })
+      .populate("category", "name")
+      .sort({ createdAt: -1 });
+    res.status(200).json(blogs);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };

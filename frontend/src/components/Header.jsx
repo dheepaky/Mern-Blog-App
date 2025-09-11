@@ -34,7 +34,7 @@ export default function Header() {
           <ul className="flex items-center space-x-10">
             <li>
               <Link
-                to="/home"
+                to="/"
                 className="cursor-pointer border-b-2 border-transparent hover:border-cyan-400 transition-colors duration-300">
                 Home
               </Link>
@@ -127,7 +127,7 @@ export default function Header() {
           </Link>
 
           <Link
-            to="/home"
+            to="/"
             className="flex items-center cursor-pointer border-b-2 border-transparent hover:border-cyan-400 transition-colors duration-300">
             <MdOutlineHome size={15} />
             Home
