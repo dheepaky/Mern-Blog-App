@@ -9,10 +9,12 @@ export default function CreateBlog() {
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
 
-  const PORT = "http://localhost:5000/api/";
+  const axiosInstance = axios.create({
+    baseURL: "/api",
+  });
   const navigate = useNavigate();
   const fetchcategory = async () => {
-    const response = await axios.get(`${PORT}category/categories`);
+    const response = await axiosInstance.get(`category/categories`);
     setcategory(response.data);
   };
 
@@ -29,7 +31,7 @@ export default function CreateBlog() {
       formData.append("img", img);
     }
     try {
-      const response = await axios.post(`${PORT}blog/create-blog`, formData, {
+      const response = await axiosInstance.post(`blog/create-blog`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

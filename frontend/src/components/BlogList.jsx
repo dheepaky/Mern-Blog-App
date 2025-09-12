@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 
 export default function BlogList({ blog }) {
+  const API_BASE_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:5000"
+      : window.location.origin;
+
   return (
     <div className="border border-gray-300 rounded-lg p-4 mb-6 shadow-sm bg-white">
       <h2 className="text-xl font-semibold mb-5">{blog.title}</h2>
       <div className=" flex justify-center">
         <img
-          src={`http://localhost:5000${blog.img}`}
+          src={`${API_BASE_URL}${blog.img}`}
           alt="blog image"
           className="w-fit h-80 object-contain rounded-md mb-3 "
         />

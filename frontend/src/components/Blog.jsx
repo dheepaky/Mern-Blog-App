@@ -10,14 +10,16 @@ export default function Blog() {
 
   const { id } = useParams();
 
-  const PORT = "http://localhost:5000/api/";
+  const axiosInstance = axios.create({
+    baseURL: "/api",
+  });
 
   const fetchblog = async () => {
-    const response = await axios.get(`${PORT}blog/blogs`);
+    const response = await axiosInstance.get(`blog/blogs`);
     setblogs(response.data);
   };
   const fetchcategory = async () => {
-    const response = await axios.get(`${PORT}category/categories`);
+    const response = await axiosInstance.get(`category/categories`);
     setcategory(response.data);
   };
 

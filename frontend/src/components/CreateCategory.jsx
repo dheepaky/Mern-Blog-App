@@ -1,26 +1,26 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ import navigate
+import { useNavigate } from "react-router-dom";
 
 export default function CreateCategory() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  const navigate = useNavigate(); // ✅ init navigate
-  const PORT = "http://localhost:5000/api/";
-
+  const navigate = useNavigate();
+  const axiosInstance = axios.create({
+    baseURL: "/api",
+  });
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${PORT}category/create-category`, {
+      const response = await axiosInstance.post("category/create-category", {
         name,
         description,
       });
 
       console.log("Category created:", response.data);
 
-      // ✅ Redirect to home after success
       navigate("/");
     } catch (error) {
       console.error("Error in create-category:", error.message);

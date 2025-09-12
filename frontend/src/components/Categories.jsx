@@ -8,10 +8,12 @@ export default function Categories() {
 
   const { id } = useParams();
 
-  const PORT = "http://localhost:5000/api/";
+  const axiosInstance = axios.create({
+    baseURL: "/api",
+  });
 
   const fetchcategory = async () => {
-    const response = await axios.get(`${PORT}blog/category/${id}`);
+    const response = await axiosInstance.get(`blog/category/${id}`);
     setcategory(response.data);
   };
 

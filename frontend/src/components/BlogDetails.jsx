@@ -6,11 +6,17 @@ export default function BlogDetails() {
   const [blog, setblog] = useState(null);
   const { id } = useParams();
 
-  const PORT = "http://localhost:5000/api/";
+  const axiosInstance = axios.create({
+    baseURL: "/api",
+  });
+  const API_BASE_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:5000"
+      : window.location.origin;
 
   const fetchblog = async () => {
     try {
-      const response = await axios.get(`${PORT}blog/blogs/${id}`);
+      const response = await axiosInstance.get(`blog/blogs/${id}`);
       setblog(response.data);
     } catch (error) {
       console.error("error in blog fetch", error);
@@ -42,7 +48,7 @@ export default function BlogDetails() {
 
         <div className=" flex justify-center">
           <img
-            src={`http://localhost:5000${blog.img}`}
+            src={`${API_BASE_URL}${blog.img}`}
             alt="blog image"
             className="w-fit h-80 object-contain rounded-md mb-3 "
           />
