@@ -1,46 +1,43 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateBlog() {
+  const [categories, setcategory] = useState([]);
   const [title, setTitle] = useState("");
   const [img, setImage] = useState(null);
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
 
+  const PORT = "http://localhost:5000/api/";
+  const navigate = useNavigate();
+  const fetchcategory = async () => {
+    const response = await axios.get(`${PORT}category/categories`);
+    setcategory(response.data);
+  };
+
+  useEffect(() => {
+    fetchcategory();
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("content", content);
+    if (img) {
+      formData.append("img", img);
+    }
     try {
-      // Create form data object
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("category", category);
-      formData.append("content", content);
-      if (img) {
-        formData.append("img", img);
-      }
-
-      // Send to backend
-      const response = await axios.post(
-        "http://localhost:5000/api/blog/create-blog",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-
+      const response = await axios.post(`${PORT}blog/create-blog`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("Blog created:", response.data);
-
-      // Reset form after submit
-      setTitle("");
-      setImage(null);
-      setCategory("");
-      setContent("");
+      navigate("/");
     } catch (error) {
-      console.error(
-        "Error in CreateBlog",
-        error.response?.data || error.message
-      );
+      console.error("error in Createblog", error);
     }
   };
 
@@ -70,11 +67,14 @@ export default function CreateBlog() {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400">
+            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
+            required>
             <option value="">Select a category</option>
-            <option value="Technology">Technology</option>
-            <option value="Lifestyle">Lifestyle</option>
-            <option value="Education">Education</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -85,7 +85,7 @@ export default function CreateBlog() {
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files[0])}
-            className="w-fit border border-black"
+            className="w-fit border border-black "
           />
         </div>
 

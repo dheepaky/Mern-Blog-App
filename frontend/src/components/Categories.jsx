@@ -19,7 +19,7 @@ export default function Categories() {
     fetchcategory();
   }, []);
 
-  if (categories.length > 0) {
+  if (categories.length === 0) {
     <p className="text-3xl text-black">blog not found</p>;
   }
 
@@ -29,6 +29,7 @@ export default function Categories() {
 
       <div className="w-full md:w-[70%]">
         <h1 className="text-3xl font-bold mb-6">{categories.name}</h1>
+
         {categories.map((blog) => (
           <BlogList key={blog._id} blog={blog} />
         ))}

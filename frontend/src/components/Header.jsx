@@ -7,8 +7,32 @@ import {
   MdCategory,
   MdOutlineHome,
 } from "react-icons/md";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Header() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (query.trim() === "") {
+        setResults([]);
+        return;
+      }
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/blog/search?query=${query}`
+        );
+        setResults(res.data);
+        setShowDropdown(true);
+      } catch (error) {
+        console.error("Error searching blogs:", error);
+      }
+    };
+    const delay = setTimeout(fetchData, 300); // debounce 300ms
+    return () => clearTimeout(delay);
+  }, [query]);
   return (
     <>
       {/* Desktop Header */}
@@ -23,11 +47,37 @@ export default function Header() {
                 className="h-10 w-[50px] bg-white rounded-lg p-1"
               />
             </Link>
-            <input
-              type="text"
-              placeholder="Search Blogs..."
-              className="px-3 py-1 rounded-md text-green-200 outline-none w-60 caret-cyan-400"
-            />
+            <div className="relative w-full max-w-md mx-auto">
+              <input
+                type="text"
+                placeholder="Search blogs..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onFocus={() => query && setShowDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                className="px-3 py-2 border rounded-md outline-none focus:ring-2 focus:ring-cyan-400 w-full"
+              />
+
+              {showDropdown && results.length > 0 && (
+                <ul className="absolute bg-white text-black border rounded-md mt-1 w-full shadow-md z-10">
+                  {results.map((blog) => (
+                    <li key={blog._id}>
+                      <Link
+                        to={`/blog/${blog._id}`}
+                        className="block px-3 py-2 hover:bg-gray-100">
+                        {blog.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {showDropdown && query && results.length === 0 && (
+                <div className="absolute bg-white border rounded-md mt-1 w-full shadow-md px-3 py-2 text-gray-500">
+                  No results found
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Center: Navigation */}

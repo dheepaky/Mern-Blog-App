@@ -20,15 +20,10 @@ export default function Blog() {
     const response = await axios.get(`${PORT}category/categories`);
     setcategory(response.data);
   };
-  const fetchcategorypost = async () => {
-    const response = await axios.get(`${PORT}blog/category/${id}`);
-    setcategorypost(response.data);
-  };
 
   useEffect(() => {
     fetchblog();
     fetchcategory();
-    fetchcategorypost();
   }, []);
 
   if (blogs.length > 0) {

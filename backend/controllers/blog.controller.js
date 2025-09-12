@@ -1,10 +1,13 @@
 import categorymodel from "../models/category.model.js";
 import blogmodel from "../models/blog.model.js";
 import slugify from "slugify";
+import multer from "multer";
+const upload = multer({ dest: "uploads/" });
 
 export const createblog = async (req, res) => {
   try {
-    const { title, img, category, content } = req.body;
+    const { title, category, content } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
     const slug = slugify(title.toLowerCase().replace(/ /g, "-"));
     const existingBlog = await blogmodel.findOne({ slug });
     if (existingBlog) {
@@ -15,7 +18,7 @@ export const createblog = async (req, res) => {
     const blog = new blogmodel({
       title,
       slug,
-      img,
+      img: image,
       category,
       content,
     });
@@ -100,5 +103,28 @@ export const getpostbycategory = async (req, res) => {
     res.status(200).json(blogs);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+// search
+
+export const Searchblog = async (req, res) => {
+  try {
+    const { query } = req.query; // ?query=javascript
+    if (!query) {
+      return res.json([]);
+    }
+
+    const blogs = await blogmodel
+      .find({
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { content: { $regex: query, $options: "i" } },
+        ],
+      })
+      .limit(5);
+    res.json(blogs);
+  } catch (error) {
+    res.status(500).json({ message: "Error searching blogs", error });
   }
 };

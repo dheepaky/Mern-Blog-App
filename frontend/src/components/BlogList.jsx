@@ -6,7 +6,7 @@ export default function BlogList({ blog }) {
       <h2 className="text-xl font-semibold mb-5">{blog.title}</h2>
       <div className=" flex justify-center">
         <img
-          src={blog.img}
+          src={`http://localhost:5000${blog.img}`}
           alt="blog image"
           className="w-fit h-80 object-contain rounded-md mb-3 "
         />

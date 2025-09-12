@@ -11,6 +11,7 @@ import About from "./pages/About";
 import ScrollToTop from "./pages/ScrollToTop";
 import BlogDetails from "./components/BlogDetails";
 import Categories from "./components/Categories";
+import SearchResults from "./pages/SearchResults";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetails />} />
           <Route path="/category/:id" element={<Categories />} />
+          <Route path="/search/:query" element={<SearchResults />} />
           <Route path="/create-blog" element={<CreateBlog />} />
           <Route path="/create-category" element={<CreateCategory />} />
           <Route path="/login" element={<Login />} />

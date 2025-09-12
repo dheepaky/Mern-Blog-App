@@ -24,6 +24,9 @@ export default function BlogDetails() {
   if (!blog) {
     return <p>Loading...</p>;
   }
+  if (blog.length === 0) {
+    return <p>This page Empty</p>;
+  }
 
   const formattedDate = Intl.DateTimeFormat("en-Us", {
     month: "long",
@@ -39,7 +42,7 @@ export default function BlogDetails() {
 
         <div className=" flex justify-center">
           <img
-            src={blog.img}
+            src={`http://localhost:5000${blog.img}`}
             alt="blog image"
             className="w-fit h-80 object-contain rounded-md mb-3 "
           />

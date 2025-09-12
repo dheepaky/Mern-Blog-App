@@ -1,17 +1,31 @@
+import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ import navigate
 
 export default function CreateCategory() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate(); // ✅ init navigate
+  const PORT = "http://localhost:5000/api/";
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // later connect with your backend API
-    const newCategory = { name, description };
-    console.log("Category Created:", newCategory);
+    try {
+      const response = await axios.post(`${PORT}category/create-category`, {
+        name,
+        description,
+      });
 
-    // reset form
+      console.log("Category created:", response.data);
+
+      // ✅ Redirect to home after success
+      navigate("/");
+    } catch (error) {
+      console.error("Error in create-category:", error.message);
+    }
+
     setName("");
     setDescription("");
   };
@@ -42,14 +56,14 @@ export default function CreateCategory() {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter category description (optional)"
             className="w-full px-3 py-2 border rounded-md outline-none focus:ring-2 focus:ring-cyan-400"
-            rows={3}
+            rows={2}
           />
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full my-15 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-500 text-white py-2 rounded-md transition">
+          className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-500 text-white py-2 rounded-md transition">
           Create Category
         </button>
       </form>
