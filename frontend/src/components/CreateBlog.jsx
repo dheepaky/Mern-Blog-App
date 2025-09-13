@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { API_BASE_URL } from "../baseurl/BaseUrl";
 
 export default function CreateBlog() {
   const [categories, setcategory] = useState([]);
@@ -8,39 +11,47 @@ export default function CreateBlog() {
   const [img, setImage] = useState(null);
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
+  // const [preview, setPreview] = useState("");
 
-  const axiosInstance = axios.create({
-    baseURL: "/api",
-  });
+  // const axiosInstance = axios.create({
+  //   baseURL: "/api",
+  // });
   const navigate = useNavigate();
+
   const fetchcategory = async () => {
-    const response = await axiosInstance.get(`category/categories`);
+    const response = await axios.get(`${API_BASE_URL}/category/categories`);
     setcategory(response.data);
   };
 
   useEffect(() => {
     fetchcategory();
   }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("category", category);
-    formData.append("content", content);
-    if (img) {
-      formData.append("img", img);
-    }
+
+    // if (!preview) return;
     try {
-      const response = await axiosInstance.post(`blog/create-blog`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const response = await axios.post("${API_BASE_URL}/blog/create-blog", {
+        title,
+        category,
+        content,
+        img: img,
       });
       console.log("Blog created:", response.data);
       navigate("/");
     } catch (error) {
       console.error("error in Createblog", error);
     }
+    // console.log(img);
+  };
+  const handlefileupload = (e) => {
+    const file = e.target.files[0];
+    var reader = new FileReader();
+    reader.onloadend = function () {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -51,62 +62,52 @@ export default function CreateBlog() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Title */}
-        <div>
-          <label className="block mb-1 font-medium">Blog Title</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter blog title"
-            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-        </div>
-
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter blog title"
+          className="w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
+          required
+        />
         {/* Category */}
-        <div>
-          <label className="block mb-1 font-medium">Category</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400"
-            required>
-            <option value="">Select a category</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="w-full border rounded-md px-4 py-3 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
+          required>
+          <option value="">Select a category</option>
+          {categories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
 
         {/* Image */}
-        <div>
-          <label className="block mb-1 font-medium">Blog Image</label>
+        <div className="flex items-center space-x-4">
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-            className="w-fit border border-black "
+            onChange={handlefileupload}
+            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors duration-200"
           />
+          {img && <img src={img} alt="Preview" className="h-20 rounded-md" />}
         </div>
 
         {/* Content */}
-        <div>
-          <label className="block mb-1 font-medium">Content</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Write your blog content here..."
-            className="w-full border rounded-md px-3 py-2 h-40 outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-        </div>
+        {/* <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Write your blog content here..."
+          className="w-full border rounded-md px-3 py-2 h-40"
+          required
+        /> */}
 
-        {/* Submit Button */}
+        <ReactQuill theme="snow" value={content} onChange={setContent} />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition">
+          className="w-full bg-blue-600 text-white py-2 rounded-md">
           Publish Blog
         </button>
       </form>

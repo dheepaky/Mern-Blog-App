@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import BlogList from "./BlogList";
+import { API_BASE_URL } from "../baseurl/BaseUrl";
 
 export default function Blog() {
   const [blogs, setblogs] = useState([]);
@@ -10,16 +11,16 @@ export default function Blog() {
 
   const { id } = useParams();
 
-  const axiosInstance = axios.create({
-    baseURL: "/api",
-  });
+  // const axiosInstance = axios.create({
+  //   baseURL: "/api",
+  // });
 
   const fetchblog = async () => {
-    const response = await axiosInstance.get(`blog/blogs`);
+    const response = await axios.get(`${API_BASE_URL}/blog/blogs`);
     setblogs(response.data);
   };
   const fetchcategory = async () => {
-    const response = await axiosInstance.get(`category/categories`);
+    const response = await axios.get(`${API_BASE_URL}/category/categories`);
     setcategory(response.data);
   };
 
@@ -49,13 +50,11 @@ export default function Blog() {
       <div className="w-full md:w-[30%]">
         <h1 className="text-center text-2xl font-bold mb-4">Categories</h1>
         {categories.map((category) => (
-          <>
-            <ul className="space-y-3 ">
-              <li className="bg-gray-100 p-3 text-center rounded-md hover:bg-gray-200 cursor-pointer">
-                <Link to={`/category/${category._id}`}>{category.name}</Link>
-              </li>
-            </ul>
-          </>
+          <ul className="space-y-3 gap-5 " key={category._id}>
+            <li className="bg-gray-100 p-3 text-center py-4 rounded-md hover:bg-gray-200 cursor-pointer">
+              <Link to={`/category/${category._id}`}>{category.name}</Link>
+            </li>
+          </ul>
         ))}
       </div>
     </div>

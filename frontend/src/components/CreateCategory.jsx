@@ -1,23 +1,27 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../baseurl/BaseUrl";
 
 export default function CreateCategory() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
   const navigate = useNavigate();
-  const axiosInstance = axios.create({
-    baseURL: "/api",
-  });
+  // const axiosInstance = axios.create({
+  //   baseURL: "/api",
+  // });
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post("category/create-category", {
-        name,
-        description,
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/category/create-category`,
+        {
+          name,
+          description,
+        }
+      );
 
       console.log("Category created:", response.data);
 

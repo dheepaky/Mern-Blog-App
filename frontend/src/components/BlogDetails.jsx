@@ -1,22 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ContentView from "./ContentView";
+import { API_BASE_URL } from "../baseurl/BaseUrl";
 
 export default function BlogDetails() {
   const [blog, setblog] = useState(null);
   const { id } = useParams();
 
-  const axiosInstance = axios.create({
-    baseURL: "/api",
-  });
-  const API_BASE_URL =
-    import.meta.env.MODE === "development"
-      ? "http://localhost:5000"
-      : window.location.origin;
+  // const axiosInstance = axios.create({
+  //   baseURL: "/api",
+  // });
 
   const fetchblog = async () => {
     try {
-      const response = await axiosInstance.get(`blog/blogs/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/blog/blogs/${id}`);
       setblog(response.data);
     } catch (error) {
       console.error("error in blog fetch", error);
@@ -47,14 +45,20 @@ export default function BlogDetails() {
         <h4>{formattedDate}</h4>
 
         <div className=" flex justify-center">
-          <img
-            src={`${API_BASE_URL}${blog.img}`}
-            alt="blog image"
-            className="w-fit h-80 object-contain rounded-md mb-3 "
-          />
+          {blog.img ? (
+            <img
+              // src={`${API_BASE_URL}${blog.img}`}
+              src={blog.img}
+              alt="blog image"
+              className="w-fit h-80 object-contain rounded-md mb-3 "
+            />
+          ) : null}
         </div>
 
-        <p className="text-gray-700">{blog.content}</p>
+        <div className="prose">
+          {/* Add 'prose' class for basic typography */}
+          <ContentView content={blog.content} />
+        </div>
       </div>
     </>
   );

@@ -1,13 +1,13 @@
 import categorymodel from "../models/category.model.js";
 import blogmodel from "../models/blog.model.js";
 import slugify from "slugify";
-import multer from "multer";
-const upload = multer({ dest: "uploads/" });
+import cloudinary from "cloudinary";
 
 export const createblog = async (req, res) => {
   try {
     const { title, category, content } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    let { img } = req.body;
+
     const slug = slugify(title.toLowerCase().replace(/ /g, "-"));
     const existingBlog = await blogmodel.findOne({ slug });
     if (existingBlog) {
@@ -15,10 +15,20 @@ export const createblog = async (req, res) => {
         message: "Slug already exists. Please choose a different title.",
       });
     }
+    // cloudinary
+    if (img) {
+      const uploadedResponse = await cloudinary.uploader.upload(img, {
+        folder: "/cloudinary-demo",
+      });
+      // console.log(uploadedResponse);
+
+      img = uploadedResponse.secure_url;
+    }
+
     const blog = new blogmodel({
       title,
+      img,
       slug,
-      img: image,
       category,
       content,
     });
