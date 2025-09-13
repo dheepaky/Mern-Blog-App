@@ -20,7 +20,7 @@ export const createblog = async (req, res) => {
       const uploadedResponse = await cloudinary.uploader.upload(img, {
         folder: "/cloudinary-demo",
       });
-      // console.log(uploadedResponse);
+      console.log(uploadedResponse);
 
       img = uploadedResponse.secure_url;
     }
