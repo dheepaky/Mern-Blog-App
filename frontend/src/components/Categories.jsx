@@ -14,7 +14,7 @@ export default function Categories() {
   // });
 
   const fetchcategory = async () => {
-    const response = await axios.get(`${API_BASE_URL}/blog/category/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/api/blog/category/${id}`);
     setcategory(response.data);
   };
 

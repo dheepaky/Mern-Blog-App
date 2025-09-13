@@ -23,7 +23,7 @@ export default function Header() {
       }
       try {
         const res = await axios.get(
-          `${API_BASE_URL}/blog/search?query=${query}`
+          `${API_BASE_URL}/api/blog/search?query=${query}`
         );
         setResults(res.data);
         setShowDropdown(true);
