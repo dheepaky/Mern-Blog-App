@@ -14,7 +14,7 @@ export default function BlogDetails() {
 
   const fetchblog = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/blog/blogs/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/blog/blogs/${id}`);
       setblog(response.data);
     } catch (error) {
       console.error("error in blog fetch", error);

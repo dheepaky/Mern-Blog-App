@@ -19,7 +19,7 @@ export default function CreateBlog() {
   const navigate = useNavigate();
 
   const fetchcategory = async () => {
-    const response = await axios.get(`${API_BASE_URL}/api/category/categories`);
+    const response = await axios.get(`${API_BASE_URL}/category/categories`);
     setcategory(response.data);
   };
 
@@ -32,15 +32,12 @@ export default function CreateBlog() {
 
     // if (!preview) return;
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/blog/create-blog`,
-        {
-          title,
-          category,
-          content,
-          img: img,
-        }
-      );
+      const response = await axios.post(`${API_BASE_URL}/blog/create-blog`, {
+        title,
+        category,
+        content,
+        img: img,
+      });
       console.log("Blog created:", response.data);
       navigate("/");
     } catch (error) {

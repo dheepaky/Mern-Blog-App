@@ -16,7 +16,7 @@ export default function CreateCategory() {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/category/create-category`,
+        `${API_BASE_URL}/category/create-category`,
         {
           name,
           description,

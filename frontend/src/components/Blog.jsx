@@ -16,11 +16,11 @@ export default function Blog() {
   // });
 
   const fetchblog = async () => {
-    const response = await axios.get(`${API_BASE_URL}/api/blog/blogs`);
+    const response = await axios.get(`${API_BASE_URL}/blog/blogs`);
     setblogs(response.data);
   };
   const fetchcategory = async () => {
-    const response = await axios.get(`${API_BASE_URL}/api/category/categories`);
+    const response = await axios.get(`${API_BASE_URL}/category/categories`);
     setcategory(response.data);
   };
 
