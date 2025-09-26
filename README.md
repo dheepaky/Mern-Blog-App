@@ -7,7 +7,7 @@
 
 A modern, full-featured **Blog CMS** built with the **MERN** stack. Quickly create, manage, and publish high-quality content with secure authentication and a responsive UI.
 
-* **🌐 Live Demo:** [Link to Deployed App (e.g., Render/Vercel)]()
+* **🌐 Live Demo:** [https://mernstack-blogs-webapp.onrender.com](https://mernstack-blogs-webapp.onrender.com)
 
 ***
 
