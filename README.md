@@ -63,6 +63,7 @@ npm install --prefix client
 
 ### **2. Environment Variables**
 
+```bash
 MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
 JWT_SECRET=SUPER_SECRET_KEY
 # Cloudinary credentials for image hosting
@@ -70,8 +71,8 @@ CLOUDINARY_CLOUD_NAME=YOUR_CLOUD_NAME
 CLOUDINARY_API_KEY=YOUR_API_KEY
 CLOUDINARY_API_SECRET=YOUR_API_SECRET
 PORT=5000
-
-***
+```
+---
 
 ### **3. Run Locally**
 
@@ -82,6 +83,8 @@ Backend API (/server): npm run dev
 Frontend UI (/client): npm start
 
 The app is live at http://localhost:3000.
+
+---
 
 ## 🔮 Future Enhancement Roadmap
 
