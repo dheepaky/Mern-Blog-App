@@ -103,6 +103,6 @@ We welcome contributions! Please fork the repo and submit a Pull Request.
 
 **Dheepak Y**
 
-GitHub: dheepaky
+* **GitHub:** [dheepaky](https://github.com/dheepaky)
 
 
