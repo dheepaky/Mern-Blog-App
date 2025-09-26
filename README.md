@@ -1,5 +1,3 @@
-
-````markdown
 # ✨ MERN Blog App: Full-Stack Content Hub
 
 [![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
@@ -43,8 +41,7 @@ This project is built on the most popular JavaScript stack.
 * **Node.js & Express**
 * **Security:** **JWT** and **Bcrypt**
 * **Images:** **Cloudinary SDK** and **Multer**
-
-### **Database (💾)**
+* **Database (💾)**
 * **MongoDB** (via Mongoose ODM)
 
 ***
@@ -60,55 +57,3 @@ cd Mern-Blog-App
 # Install dependencies in both folders
 npm install --prefix server
 npm install --prefix client
-````
-
-### **2. Environment Variables**
-
-Create a **`.env`** file in the **`server`** directory:
-
-```ini
-MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
-JWT_SECRET=SUPER_SECRET_KEY
-# Cloudinary credentials for image hosting
-CLOUDINARY_CLOUD_NAME=YOUR_CLOUD_NAME
-CLOUDINARY_API_KEY=YOUR_API_KEY
-CLOUDINARY_API_SECRET=YOUR_API_SECRET
-PORT=5000
-```
-
-### **3. Run Locally**
-
-Start the backend and frontend in separate terminals:
-
-1.  **Backend API** (`/server`): `npm run dev`
-2.  **Frontend UI** (`/client`): `npm start`
-
-The app is live at **`http://localhost:3000`**.
-
------
-
-## 🔮 Roadmap
-
-  * 💬 **Comment System:** Nested replies and threaded discussions.
-  * 🔔 **Notifications:** Real-time alerts for new comments.
-  * 📈 **Analytics:** Basic view tracking for posts.
-
------
-
-## 🤝 Contributing
-
-We welcome contributions\! Please fork the repo and submit a Pull Request.
-
------
-
-## 🧑‍💻 Author
-
-**Dheepak Y**
-
-  * **GitHub:** [dheepaky](https://github.com/dheepaky)
-  * **Project Link:** [MERN Blog App](https://github.com/dheepaky/Mern-Blog-App)
-
-<!-- end list -->
-
-```
-```
