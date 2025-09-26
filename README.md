@@ -58,6 +58,8 @@ cd Mern-Blog-App
 # Install dependencies in both folders
 npm install --prefix server
 npm install --prefix client
+```
+***
 
 ### **2. Environment Variables**
 
@@ -69,8 +71,7 @@ CLOUDINARY_API_KEY=YOUR_API_KEY
 CLOUDINARY_API_SECRET=YOUR_API_SECRET
 PORT=5000
 
-LOUDINARY_API_SECRET=YOUR_API_SECRET
-PORT=5000
+***
 
 ### **3. Run Locally**
 
@@ -82,7 +83,7 @@ Frontend UI (/client): npm start
 
 The app is live at http://localhost:3000.
 
-🔮 Future Enhancement Roadmap
+## 🔮 Future Enhancement Roadmap
 
 💬 Comment System: Nested replies and threaded discussions.
 
@@ -93,10 +94,12 @@ The app is live at http://localhost:3000.
 🤝 Contributing
 We welcome contributions! Please fork the repo and submit a Pull Request.
 
-🧑‍💻 Author
+---
 
-Dheepak Y
+## 👤 Author
+
+**Dheepak Y**
 
 GitHub: dheepaky
 
-Project Link: MERN Blog App
+
