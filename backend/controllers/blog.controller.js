@@ -31,18 +31,19 @@ export const createblog = async (req, res) => {
       slug,
       category,
       content,
+      author: req.user._id, //authUser
     });
     const blogs = await blog.save();
     res.status(201).json(blogs);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const viewblog = async (req, res) => {
   try {
     const blogs = await blogmodel.find().sort({ createdAt: -1 });
-    res.status(201).json(blogs);
+    res.status(200).json(blogs);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -55,27 +56,43 @@ export const singleblog = async (req, res) => {
     }
     res.status(201).json(blog);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const deleteblog = async (req, res) => {
   try {
-    const blog = await blogmodel.findByIdAndDelete(req.params.id);
+    const blogId = req.params.id;
+    const blog = await blogmodel.findById(blogId);
     if (!blog) {
-      return res.status(404).json({ message: "Blog not found" });
+      return res.status(400).json({ message: "blog not found" });
     }
+    if (blog.author.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: "Not allowed to delete" });
+    }
+    await blogmodel.findByIdAndDelete(blogId);
+
     res.status(200).json({ message: "Blog Deleted Successfully" });
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const updateblog = async (req, res) => {
   try {
     const { title, img, category, content } = req.body;
-    const blog = await blogmodel.findByIdAndUpdate(
-      req.params.id,
+    const slug = slugify(title.toLowerCase().replace(/ /g, "-"));
+    const blogId = req.params.id;
+    const blog = await blogmodel.findById(blogId);
+    if (!blog) {
+      return res.status(400).json({ message: "blog not found" });
+    }
+    if (blog.author.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: "Not allowed to delete" });
+    }
+
+    await blogmodel.findByIdAndUpdate(
+      blogId,
       {
         title,
         slug,
@@ -85,12 +102,10 @@ export const updateblog = async (req, res) => {
       },
       { new: true }
     );
-    if (!blog) {
-      return res.status(404).json({ message: "Blog not found" });
-    }
+
     res.status(200).json(blog);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -103,7 +118,7 @@ export const getpostbycategory = async (req, res) => {
     const categoryexist = await categorymodel.findById(categoryid);
 
     if (!categoryexist) {
-      res.status(404).json({ message: "invalid category" });
+      return res.status(404).json({ message: "invalid category" });
     }
     // fetch post
     const blogs = await blogmodel
@@ -112,7 +127,7 @@ export const getpostbycategory = async (req, res) => {
       .sort({ createdAt: -1 });
     res.status(200).json(blogs);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

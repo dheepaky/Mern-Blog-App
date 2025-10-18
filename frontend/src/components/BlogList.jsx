@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function BlogList({ blog }) {
   return (
     <div className="border border-gray-300 rounded-lg p-4 mb-6 shadow-sm bg-white">
-      <h2 className="text-xl font-semibold mb-5">{blog.title}</h2>
+      <h2 className="text-xl font-semibold mb-5">{blog.title.toUpperCase()}</h2>
       <div className=" flex justify-center">
         {blog.img ? (
           <img

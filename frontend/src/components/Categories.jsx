@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import BlogList from "./BlogList";
 import { API_BASE_URL } from "../baseurl/BaseUrl";
+import BlogSkeleton from "../pages/BlogSkeleton";
 
 export default function Categories() {
   const [categories, setcategory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [categoryList, setCategoryList] = useState([]);
 
   const { id } = useParams();
 
@@ -14,13 +17,31 @@ export default function Categories() {
   // });
 
   const fetchcategory = async () => {
-    const response = await axios.get(`${API_BASE_URL}/blog/category/${id}`);
-    setcategory(response.data);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await axios.get(`${API_BASE_URL}/blog/category/${id}`);
+      setcategory(response.data);
+    } catch (error) {
+      console.error("error in category fetch", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCategoryList = async () => {
+    const response = await axios.get(`${API_BASE_URL}/category/categories`);
+    setCategoryList(response.data);
   };
 
   useEffect(() => {
-    fetchcategory();
+    fetchcategory(); // Refetches when category ID changes
+  }, [id]);
+
+  useEffect(() => {
+    fetchCategoryList(); // Loads all categories once
   }, []);
+
+  if (loading) return <BlogSkeleton />;
 
   return (
     <div className="flex flex-col md:flex-row gap-6 p-5">
@@ -35,6 +56,28 @@ export default function Categories() {
         {categories.map((blog) => (
           <BlogList key={blog._id} blog={blog} />
         ))}
+      </div>
+
+      <div className="w-full md:w-[30%]">
+        <h1 className="text-center text-2xl font-bold mb-4">Categories</h1>
+
+        <ul className="space-y-3 gap-5">
+          {categoryList.map((category) => (
+            <li key={category._id}>
+              <NavLink
+                to={`/category/${category._id}`}
+                className={({ isActive }) =>
+                  `block p-3 text-center py-4 rounded-md cursor-pointer transition-all duration-300 ${
+                    isActive
+                      ? "bg-gray-300  scale-105 font-semibold"
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`
+                }>
+                {category.name}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

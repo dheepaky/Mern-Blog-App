@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import db from "./db/db.js";
 import blogrouter from "./routes/blog.route.js";
 import categoryrouter from "./routes/category.route.js";
+import userRouter from "./routes/user.route.js";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
@@ -28,11 +30,13 @@ app.use(
 );
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 5000;
 
 app.use("/api/blog", blogrouter);
 app.use("/api/category", categoryrouter);
+app.use("/api/auth/user", userRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
@@ -43,7 +47,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.get("/", (req, res) => {
-  res.send("API works");
+  res.send("API is Running.........");
 });
 
 app.listen(PORT, () => {

@@ -1,26 +1,29 @@
-import { Link } from "react-router-dom";
-import blog from "../../src/assets/blog.png";
-import profileimg from "../../src/assets/avatar-placeholder.png";
+import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   MdOutlineLogout,
   MdPostAdd,
   MdCategory,
   MdOutlineHome,
 } from "react-icons/md";
-import { useEffect, useState } from "react";
-import axios from "axios";
+
+import blogLogo from "../../src/assets/blog.png";
+import profileimg from "../../src/assets/avatar-placeholder.png";
 import { API_BASE_URL } from "../baseurl/BaseUrl";
 
 export default function Header() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       if (query.trim() === "") {
         setResults([]);
         return;
       }
+
       try {
         const res = await axios.get(
           `${API_BASE_URL}/blog/search?query=${query}`
@@ -31,96 +34,92 @@ export default function Header() {
         console.error("Error searching blogs:", error);
       }
     };
-    const delay = setTimeout(fetchData, 300); // debounce 300ms
+
+    const delay = setTimeout(fetchData, 300); // debounce
     return () => clearTimeout(delay);
   }, [query]);
+
   return (
     <>
-      {/* Desktop Header */}
-      <div className="p-3 sticky top-0 bgcolor text-white shadow-md ">
+      {/* ========== Desktop Header ========== */}
+      <header className="p-3 sticky transition-all top-0 z-50 bg-gray-800 text-white shadow-md">
         <div className="flex items-center justify-between">
-          {/* Left: Logo + Search */}
-          <div className="flex items-center gap-5 ml-2">
+          {/* === Left: Logo + Search === */}
+          <div className="flex items-center gap-5">
             <Link to="/">
               <img
-                src={blog}
+                src={blogLogo}
                 alt="logo"
-                className="h-8 w-[40px] md:h-10 md:w-[50px] bg-white rounded-lg p-1"
+                className="h-10 w-12 bg-white rounded-md p-1"
               />
             </Link>
-            <div className="relative w-full max-w-md mx-auto">
+
+            <div className="relative w-full max-w-md">
               <input
                 type="text"
-                placeholder="Search Blogs..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onFocus={() => query && setShowDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-                className="px-2 py-1 md:px-3  caret-cyan-400 text-green-100 md:py-2 focus:ring-1 focus:ring-gray-600 rounded-md outline-none   w-full"
+                placeholder="Search Blogs..."
+                className="w-full px-4 py-2 text-sm md:text-base bg-gray-800 text-white rounded-md focus:ring focus:ring-cyan-500 outline-none"
               />
 
-              {showDropdown && results.length > 0 && (
-                <ul className="absolute bg-white text-black border rounded-md mt-1 w-full shadow-md z-10">
-                  {results.map((blog) => (
-                    <li key={blog._id}>
+              {/* Dropdown Results */}
+              {showDropdown && (
+                <div className="absolute left-0 right-0 bg-white text-black mt-1 rounded-md shadow-lg overflow-hidden z-50">
+                  {results.length > 0 ? (
+                    results.map((blog) => (
                       <Link
+                        key={blog._id}
                         to={`/blog/${blog._id}`}
-                        className="block px-3 py-2 hover:bg-gray-100">
+                        className="block px-4 py-2 hover:bg-gray-100 transition">
                         {blog.title}
                       </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {showDropdown && query && results.length === 0 && (
-                <div className="absolute bg-white border rounded-md mt-1 w-full shadow-md px-3 py-2 text-gray-500">
-                  No results found
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-gray-500">
+                      No results found
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           </div>
-
-          {/* Center: Navigation */}
-          <div className="md:block hidden">
-            <ul className="flex items-center space-x-10">
-              <li>
-                <Link
-                  to="/"
-                  className="cursor-pointer border-b-2 border-transparent hover:border-cyan-400 transition-colors duration-300">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="cursor-pointer border-b-2 border-transparent hover:border-cyan-400 transition-colors duration-300">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="cursor-pointer border-b-2 border-transparent hover:border-cyan-400 transition-colors duration-300">
-                  Contact
-                </Link>
-              </li>
+          {/* === Center Nav === */}
+          <nav className="hidden md:block">
+            <ul className="flex gap-10 text-sm ">
+              {["Home", "About", "Contact"].map((item) => (
+                <li key={item}>
+                  <NavLink
+                    to={`/${
+                      item.toLowerCase() === "home" ? "" : item.toLowerCase()
+                    }`}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "border-b-2  border-cyan-400  underline-offset-8 scale-125 transition-all  font-semibold"
+                        : "hover:scale-50 hover:text-cyan-400 transition-transform duration-300"
+                    }>
+                    {item}
+                  </NavLink>
+                </li>
+              ))}
             </ul>
-          </div>
+          </nav>
 
-          {/* Right: Actions + Profile */}
+          {/* === Right: Actions === */}
           <div className="flex items-center gap-4">
-            <div className="md:flex items-center gap-4 hidden">
+            <div className="hidden md:flex items-center gap-4 text-sm">
               <Link
                 to="/create-blog"
-                className="flex items-center gap-2 border border-transparent  hover:border-cyan-400 active:bg-blue-500 px-3 py-1.5 rounded-md transition">
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md border hover:border-cyan-400 transition">
                 <MdPostAdd size={20} />
                 Create Blog
               </Link>
 
               <Link
                 to="/create-category"
-                className="flex items-center gap-2  border border-transparent  hover:border-cyan-400 active:bg-emerald-500 px-3 py-1.5 rounded-md transition">
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md border hover:border-cyan-400 transition">
                 <MdCategory size={20} />
                 Create Category
               </Link>
@@ -134,32 +133,32 @@ export default function Header() {
             <img
               src={profileimg}
               alt="profile"
-              className="md:h-8 md:w-8 h-7 w-7 rounded-full border border-gray-300"
+              className="h-8 w-8 rounded-full border border-gray-300"
             />
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Header - Action Buttons */}
-      <div className="sticky top-0 bgcolor p-4 block md:hidden shadow-md">
-        <div className="flex justify-around text-xs text-white">
+      {/* ========== Mobile Header ========== */}
+      <div className="sticky top-0 z-40 bg-black text-white p-4 md:hidden shadow-md">
+        <div className="flex justify-around text-xs">
           <Link
             to="/create-blog"
-            className="flex items-center gap-1 border border-transparent  hover:border-cyan-400 active:bg-blue-500 px-2 py-1 rounded-md transition">
+            className="flex items-center gap-1 px-2 py-1 border rounded-md hover:border-cyan-400">
             <MdPostAdd size={15} />
             Blog
           </Link>
 
           <Link
             to="/"
-            className="flex items-center cursor-pointer border-b-2 border-transparent hover:border-cyan-400 transition-colors duration-300">
+            className="flex items-center gap-1 px-2 py-1 border-b-2 border-transparent hover:border-cyan-400">
             <MdOutlineHome size={15} />
             Home
           </Link>
 
           <Link
             to="/create-category"
-            className="flex items-center gap-1 border border-transparent  hover:border-cyan-400 active:bg-emerald-500 px-2 py-1 rounded-md transition">
+            className="flex items-center gap-1 px-2 py-1 border rounded-md hover:border-cyan-400">
             <MdCategory size={15} />
             Category
           </Link>

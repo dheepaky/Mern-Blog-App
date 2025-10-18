@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import BlogList from "./BlogList";
 import { API_BASE_URL } from "../baseurl/BaseUrl";
+import BlogSkeleton from "../pages/BlogSkeleton";
 
 export default function Blog() {
+  const [loading, setLoading] = useState(true);
   const [blogs, setblogs] = useState([]);
   const [categories, setcategory] = useState([]);
   const [categoriespost, setcategorypost] = useState([]);
@@ -16,9 +18,17 @@ export default function Blog() {
   // });
 
   const fetchblog = async () => {
-    const response = await axios.get(`${API_BASE_URL}/blog/blogs`);
-    setblogs(response.data);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await axios.get(`${API_BASE_URL}/blog/blogs`);
+      setblogs(response.data);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
   const fetchcategory = async () => {
     const response = await axios.get(`${API_BASE_URL}/category/categories`);
     setcategory(response.data);
@@ -29,12 +39,10 @@ export default function Blog() {
     fetchcategory();
   }, []);
 
-  if (blogs.length > 0) {
-    <p className="text-3xl text-black">blog not found</p>;
-  }
+  if (loading) return <BlogSkeleton />;
 
-  if (!blogs) {
-    return <p>Loading...</p>;
+  if (!blogs || blogs.length === 0) {
+    return <p className="text-3xl text-black text-center">Blog not found</p>;
   }
 
   return (
@@ -49,13 +57,16 @@ export default function Blog() {
       </div>
       <div className="w-full md:w-[30%]">
         <h1 className="text-center text-2xl font-bold mb-4">Categories</h1>
-        {categories.map((category) => (
-          <ul className="space-y-3 gap-5 " key={category._id}>
-            <li className="bg-gray-100 p-3 text-center py-4 rounded-md hover:bg-gray-200 cursor-pointer">
+
+        <ul className="space-y-3 gap-5">
+          {categories.map((category) => (
+            <li
+              key={category._id}
+              className="bg-gray-100 p-3  text-center py-4 rounded-md hover:bg-gray-200 cursor-pointer">
               <Link to={`/category/${category._id}`}>{category.name}</Link>
             </li>
-          </ul>
-        ))}
+          ))}
+        </ul>
       </div>
     </div>
   );
