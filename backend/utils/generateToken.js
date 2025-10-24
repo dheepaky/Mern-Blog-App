@@ -6,9 +6,9 @@ const generateToken = (res, userId) => {
   });
 
   res.cookie("jwt", token, {
-    httpOnly: true, // JS la access panna mudiyadhu (XSS safe)//
-    // secure: process.env.NODE_ENV === "production", // HTTPS only in prod//
-    // sameSite: "strict", // CSRF protect
+    httpOnly: true, // prevent XSS attacks cross-site scripting attacks
+    sameSite: "strict", // CSRF attacks cross-site request forgery attacks
+    secure: process.env.NODE_ENV !== "development",
     maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
   });
 };

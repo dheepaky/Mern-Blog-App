@@ -9,18 +9,43 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { API_BASE_URL } from "../../baseurl/BaseUrl";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (newData) => {
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, newData, {
+        withCredentials: true,
+      });
+      return res.data;
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message || error.message || "Login failed!"
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      setTimeout(() => {
+        toast.success("Welcome Back!");
+        navigate("/");
+      }, 300);
+    },
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login with:", { email, password });
-    setEmail("");
-    setPassword("");
+    mutate({ email, password });
   };
 
   const togglePasswordVisibility = () => {
@@ -129,9 +154,12 @@ export default function Login() {
             fullWidth
             size="medium"
             sx={{ textTransform: "uppercase", borderRadius: 3 }}>
-            Sign In
+            {isPending ? "Loading.." : "Sign In"}
           </Button>
         </Box>
+
+        {/* {isError && <p className="text-red-600 mt-2">Error!</p>}
+        {isSuccess && <p className="text-green-600 mt-2">Saved!</p>} */}
 
         <Typography variant="body2" align="center" mt={4}>
           Don’t have an account?{" "}

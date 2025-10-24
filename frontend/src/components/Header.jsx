@@ -6,6 +6,8 @@ import {
   MdPostAdd,
   MdCategory,
   MdOutlineHome,
+  MdSearch,
+  MdEdit,
 } from "react-icons/md";
 
 import blogLogo from "../../src/assets/blog.png";
@@ -16,7 +18,7 @@ export default function Header() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       if (query.trim() === "") {
@@ -42,18 +44,20 @@ export default function Header() {
   return (
     <>
       {/* ========== Desktop Header ========== */}
-      <header className="p-3 sticky transition-all top-0 z-50 bg-gray-800 text-white shadow-md">
+      <header className="p-3 md:px-5 sticky transition-all top-0 z-50 bg-gray-800 text-white shadow-md">
         <div className="flex items-center justify-between">
           {/* === Left: Logo + Search === */}
           <div className="flex items-center gap-5">
-            <Link to="/">
-              <img
-                src={blogLogo}
-                alt="logo"
-                className="h-10 w-12 bg-white rounded-md p-1"
-              />
-            </Link>
-
+            <div className="flex items-center space-x-5">
+              <Link to="/" className="flex items-center gap-2 ">
+                <img
+                  src={blogLogo}
+                  alt="logo"
+                  className="h-10 w-15 bg-white rounded-md p-1"
+                />
+                <h2 className="text-[#1ac1c9] font-bold ">BLOG</h2>
+              </Link>
+            </div>
             <div className="relative w-full max-w-md">
               <input
                 type="text"
@@ -61,8 +65,8 @@ export default function Header() {
                 onChange={(e) => setQuery(e.target.value)}
                 onFocus={() => query && setShowDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-                placeholder="Search Blogs..."
-                className="w-full px-4 py-2 text-sm md:text-base bg-gray-800 text-white rounded-md focus:ring focus:ring-cyan-500 outline-none"
+                placeholder="🔎 Search Blogs...."
+                className="w-full active:w-fit duration-300 transition-all md:px-4 px-1 py-1 md:py-2 text-sm md:text-base bg-gray-800 text-white rounded-md focus:ring focus:ring-cyan-500 outline-none"
               />
 
               {/* Dropdown Results */}
@@ -73,7 +77,7 @@ export default function Header() {
                       <Link
                         key={blog._id}
                         to={`/blog/${blog._id}`}
-                        className="block px-4 py-2 hover:bg-gray-100 transition">
+                        className="block px-4 py-2 hover:bg-cyan-100 transition">
                         {blog.title}
                       </Link>
                     ))
@@ -108,8 +112,8 @@ export default function Header() {
           </nav>
 
           {/* === Right: Actions === */}
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-4 text-sm">
+          <div className="flex items-center md:gap-10 gap-2">
+            {/* <div className="hidden md:flex items-center gap-4 text-sm">
               <Link
                 to="/create-blog"
                 className="flex items-center gap-2 px-3 py-1.5 rounded-md border hover:border-cyan-400 transition">
@@ -123,24 +127,65 @@ export default function Header() {
                 <MdCategory size={20} />
                 Create Category
               </Link>
+            </div> */}
+
+            <div className="">
+              <h2>Hi userName</h2>
+            </div>
+            {/* mobile */}
+
+            {/*  */}
+            <div className="hidden md:block">
+              <button className="flex cursor-pointer items-center gap-1 hover:text-red-400 transition">
+                <MdOutlineLogout size={18} />
+                Logout
+              </button>
             </div>
 
-            <button className="flex items-center gap-1 hover:text-red-400 transition">
-              <MdOutlineLogout size={18} />
-              Logout
-            </button>
+            {/* profile */}
 
-            <img
-              src={profileimg}
-              alt="profile"
-              className="h-8 w-8 rounded-full border border-gray-300"
-            />
+            <div className="relative">
+              {/* Profile Image */}
+              <img
+                src={profileimg}
+                alt="profile"
+                onClick={() => setOpen(!open)}
+                className="h-8 w-8 rounded-full border border-gray-300 cursor-pointer"
+              />
+
+              {/* Dropdown Menu */}
+              {open && (
+                <ul
+                  className="absolute right-0 mt-2 w-40 bg-transparent rounded-md shadow-lg border border-gray-300 md:text-md text-sm text-gray-700  z-50"
+                  onMouseLeave={() => setOpen(false)} // Optional: auto-close when leaving
+                >
+                  <li className="px-4 py-4 text-center font-bold bg-cyan-100">
+                    Settings
+                  </li>
+                  <li className="px-4 py-3 font-semibold">Hi, userName</li>
+                  <li className="px-4 py-3 hover:bg-cyan-100  flex justify-between cursor-pointer">
+                    Picture
+                    <MdEdit size={20} />
+                  </li>
+                  <li
+                    className="px-4 py-3 hover:bg-red-100 text-red-600 cursor-pointer"
+                    onClick={() => {
+                      // Add logout logic here
+                      setOpen(false);
+                    }}>
+                    Logout
+                  </li>
+                </ul>
+              )}
+            </div>
+
+            {/*  */}
           </div>
         </div>
       </header>
 
       {/* ========== Mobile Header ========== */}
-      <div className="sticky top-0 z-40 bg-black text-white p-4 md:hidden shadow-md">
+      {/* <div className="sticky top-0 z-40 bg-black text-white p-4 md:hidden shadow-md">
         <div className="flex justify-around text-xs">
           <Link
             to="/create-blog"
@@ -163,7 +208,7 @@ export default function Header() {
             Category
           </Link>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

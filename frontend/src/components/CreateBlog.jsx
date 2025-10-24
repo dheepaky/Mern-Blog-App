@@ -19,7 +19,9 @@ export default function CreateBlog() {
   const navigate = useNavigate();
 
   const fetchcategory = async () => {
-    const response = await axios.get(`${API_BASE_URL}/category/categories`);
+    const response = await axios.get(`${API_BASE_URL}/category/categories`, {
+      withCredentials: true,
+    });
     setcategory(response.data);
   };
 
@@ -32,12 +34,18 @@ export default function CreateBlog() {
 
     // if (!preview) return;
     try {
-      const response = await axios.post(`${API_BASE_URL}/blog/create-blog`, {
-        title,
-        category,
-        content,
-        img: img,
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/blog/create-blog`,
+        {
+          title,
+          category,
+          content,
+          img: img,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       console.log("Blog created:", response.data);
       navigate("/");
     } catch (error) {
@@ -53,6 +61,8 @@ export default function CreateBlog() {
     };
     reader.readAsDataURL(file);
   };
+
+  // const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
   return (
     <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6">

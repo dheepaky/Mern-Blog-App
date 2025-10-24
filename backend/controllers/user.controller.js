@@ -62,19 +62,26 @@ export const loginController = async (req, res) => {
     const existingUser = await userModel.findOne({ email });
 
     if (!existingUser) {
-      res.status(400).json({ message: "Invalid Credentials" });
+      return res.status(400).json({ message: "Invalid Credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, existingUser.password);
     if (!isMatch) {
-      res.status(400).json({ message: "Invalid Credentials" });
+      return res.status(400).json({ message: "Invalid Credentials" });
     }
 
     generateToken(res, existingUser._id);
 
-    res.status(200).json({ message: "Login success" });
+    return res.status(200).json({
+      message: "Login success",
+      user: {
+        _id: existingUser._id,
+        name: existingUser.name,
+        email: existingUser.email,
+      },
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 

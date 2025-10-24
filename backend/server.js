@@ -36,7 +36,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use("/api/blog", blogrouter);
 app.use("/api/category", categoryrouter);
-app.use("/api/auth/user", userRouter);
+app.use("/api/auth", userRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
