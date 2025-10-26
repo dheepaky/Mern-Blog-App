@@ -17,34 +17,18 @@ import ScrollToTop from "./pages/ScrollToTop";
 import BlogDetails from "./components/BlogDetails";
 import Categories from "./components/Categories";
 import SearchResults from "./pages/SearchResults";
-
-import { useQuery } from "@tanstack/react-query";
-import CircularProgress from "@mui/joy/CircularProgress";
-
+import { getAuthUser } from "./api/Auth";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CircularProgress from "@mui/joy/CircularProgress";
 
 import OpenIconSpeedDial from "./components/OpenIconSpeedDial";
+import { useQuery } from "@tanstack/react-query";
 
 function App() {
   const { data: authUser, isLoading } = useQuery({
     queryKey: ["authUser"],
-    queryFn: async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/auth/me", {
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (data.error) return null;
-        if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
-        }
-        console.log("authUser is here:", data);
-        return data;
-      } catch (error) {
-        toast.error(error.message);
-      }
-    },
+    queryFn: getAuthUser,
     retry: false,
   });
 
@@ -71,7 +55,7 @@ function App() {
         theme="light"
         transition={Slide}
       />
-
+      {authUser?.user?.userName}
       <Router>
         <Header />
         <ScrollToTop />

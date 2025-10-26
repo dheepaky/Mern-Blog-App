@@ -1,31 +1,47 @@
-import { Link, NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {
-  MdOutlineLogout,
-  MdPostAdd,
-  MdCategory,
-  MdOutlineHome,
+  MdOutlineLogin,
   MdSearch,
   MdEdit,
+  MdClose,
+  MdHome,
+  MdInfo,
+  MdLogin,
 } from "react-icons/md";
-
+import { BiEnvelope } from "react-icons/bi";
+import { toast } from "react-toastify";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import blogLogo from "../../src/assets/blog.png";
 import profileimg from "../../src/assets/avatar-placeholder.png";
 import { API_BASE_URL } from "../baseurl/BaseUrl";
+import { getAuthUser } from "../api/Auth";
 
 export default function Header() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [open, setOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const menuRef = useRef();
+
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const navItems = [
+    { name: "Home", icon: <MdHome size={24} />, path: "/" },
+    { name: "About", icon: <MdInfo size={24} />, path: "/about" },
+    { name: "Contact", icon: <BiEnvelope size={24} />, path: "/contact" },
+  ];
+
+  // === Search blogs ===
   useEffect(() => {
     const fetchData = async () => {
       if (query.trim() === "") {
         setResults([]);
         return;
       }
-
       try {
         const res = await axios.get(
           `${API_BASE_URL}/blog/search?query=${query}`
@@ -37,178 +53,264 @@ export default function Header() {
       }
     };
 
-    const delay = setTimeout(fetchData, 300); // debounce
+    const delay = setTimeout(fetchData, 300);
     return () => clearTimeout(delay);
   }, [query]);
 
+  // === Close search when clicking outside ===
+  useEffect(() => {
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowSearch(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // === Logout Mutation ===
+  const { mutate: logout, isPending } = useMutation({
+    mutationFn: async () => {
+      const res = await axios.post(
+        `${API_BASE_URL}/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Logged out successfully");
+      queryClient.invalidateQueries(["authUser"]);
+      navigate("/");
+      // Optional: Reload the page cleanly after navigation
+      // setTimeout(() => {
+      //   window.location.replace(window.location.origin);
+      // }, 500);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Logout failed. Try again.");
+    },
+  });
+
+  const { data: authUser } = useQuery({
+    queryKey: ["authUser"],
+    queryFn: getAuthUser,
+    retry: false,
+  });
+
   return (
     <>
-      {/* ========== Desktop Header ========== */}
-      <header className="p-3 md:px-5 sticky transition-all top-0 z-50 bg-gray-800 text-white shadow-md">
+      <header className="relative p-3 md:px-5 sticky top-0 bg-gray-800 text-white shadow-md z-50">
         <div className="flex items-center justify-between">
           {/* === Left: Logo + Search === */}
           <div className="flex items-center gap-5">
-            <div className="flex items-center space-x-5">
-              <Link to="/" className="flex items-center gap-2 ">
-                <img
-                  src={blogLogo}
-                  alt="logo"
-                  className="h-10 w-15 bg-white rounded-md p-1"
-                />
-                <h2 className="text-[#1ac1c9] font-bold ">BLOG</h2>
-              </Link>
-            </div>
-            <div className="relative w-full max-w-md">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onFocus={() => query && setShowDropdown(true)}
-                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-                placeholder="🔎 Search Blogs...."
-                className="w-full active:w-fit duration-300 transition-all md:px-4 px-1 py-1 md:py-2 text-sm md:text-base bg-gray-800 text-white rounded-md focus:ring focus:ring-cyan-500 outline-none"
-              />
-
-              {/* Dropdown Results */}
-              {showDropdown && (
-                <div className="absolute left-0 right-0 bg-white text-black mt-1 rounded-md shadow-lg overflow-hidden z-50">
-                  {results.length > 0 ? (
-                    results.map((blog) => (
-                      <Link
-                        key={blog._id}
-                        to={`/blog/${blog._id}`}
-                        className="block px-4 py-2 hover:bg-cyan-100 transition">
-                        {blog.title}
-                      </Link>
-                    ))
-                  ) : (
-                    <div className="px-4 py-2 text-gray-500">
-                      No results found
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* === Center Nav === */}
-          <nav className="hidden md:block">
-            <ul className="flex gap-10 text-sm ">
-              {["Home", "About", "Contact"].map((item) => (
-                <li key={item}>
-                  <NavLink
-                    to={`/${
-                      item.toLowerCase() === "home" ? "" : item.toLowerCase()
-                    }`}
-                    className={({ isActive }) =>
-                      isActive
-                        ? "border-b-2  border-cyan-400  underline-offset-8 scale-125 transition-all  font-semibold"
-                        : "hover:scale-50 hover:text-cyan-400 transition-transform duration-300"
-                    }>
-                    {item}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* === Right: Actions === */}
-          <div className="flex items-center md:gap-10 gap-2">
-            {/* <div className="hidden md:flex items-center gap-4 text-sm">
-              <Link
-                to="/create-blog"
-                className="flex items-center gap-2 px-3 py-1.5 rounded-md border hover:border-cyan-400 transition">
-                <MdPostAdd size={20} />
-                Create Blog
-              </Link>
-
-              <Link
-                to="/create-category"
-                className="flex items-center gap-2 px-3 py-1.5 rounded-md border hover:border-cyan-400 transition">
-                <MdCategory size={20} />
-                Create Category
-              </Link>
-            </div> */}
-
-            <div className="">
-              <h2>Hi userName</h2>
-            </div>
-            {/* mobile */}
-
-            {/*  */}
-            <div className="hidden md:block">
-              <button className="flex cursor-pointer items-center gap-1 hover:text-red-400 transition">
-                <MdOutlineLogout size={18} />
-                Logout
-              </button>
-            </div>
-
-            {/* profile */}
-
-            <div className="relative">
-              {/* Profile Image */}
+            <Link to="/" className="flex items-center gap-2">
               <img
-                src={profileimg}
-                alt="profile"
-                onClick={() => setOpen(!open)}
-                className="h-8 w-8 rounded-full border border-gray-300 cursor-pointer"
+                src={blogLogo}
+                alt="logo"
+                className="md:h-10 h-8 md:w-12 w-8 bg-white rounded-md p-1"
               />
+              <h2 className="text-[#1ac1c9] font-bold">BLOG</h2>
+            </Link>
 
-              {/* Dropdown Menu */}
-              {open && (
-                <ul
-                  className="absolute right-0 mt-2 w-40 bg-transparent rounded-md shadow-lg border border-gray-300 md:text-md text-sm text-gray-700  z-50"
-                  onMouseLeave={() => setOpen(false)} // Optional: auto-close when leaving
-                >
-                  <li className="px-4 py-4 text-center font-bold bg-cyan-100">
-                    Settings
-                  </li>
-                  <li className="px-4 py-3 font-semibold">Hi, userName</li>
-                  <li className="px-4 py-3 hover:bg-cyan-100  flex justify-between cursor-pointer">
-                    Picture
-                    <MdEdit size={20} />
-                  </li>
-                  <li
-                    className="px-4 py-3 hover:bg-red-100 text-red-600 cursor-pointer"
-                    onClick={() => {
-                      // Add logout logic here
-                      setOpen(false);
-                    }}>
-                    Logout
-                  </li>
+            {/* Mobile search icon */}
+            <div className="flex gap-7 items-center">
+              <div
+                className="md:hidden block p-1 cursor-pointer ml-5"
+                onClick={() => setShowSearch(true)}>
+                <MdSearch
+                  className="hover:text-cyan-400 text-gray-400"
+                  size={22}
+                />
+              </div>
+
+              <div className="md:hidden block">
+                <ul className="flex gap-6 text-sm ">
+                  {navItems.map((item) => (
+                    <li key={item.name} className="text-gray-400">
+                      <NavLink
+                        to={item.path}
+                        className={({ isActive }) =>
+                          isActive
+                            ? "border-b-2 border-cyan-400 scale-105 transition-normal text-cyan-500 "
+                            : "hover:scale-95 hover:text-cyan-400 transition-transform duration-300"
+                        }>
+                        {item.icon}
+                      </NavLink>
+                    </li>
+                  ))}
                 </ul>
-              )}
+              </div>
+            </div>
+
+            {/* Desktop search */}
+            <div className="flex items-center gap-28">
+              <div className="relative w-full max-w-md hidden md:block space-x-5">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => query && setShowDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                  placeholder="🔎 Search Blogs..."
+                  className="w-full px-4 py-2 text-base bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-cyan-500 outline-none"
+                />
+                {showDropdown && (
+                  <div className="absolute left-0 right-0 bg-white text-black mt-1 rounded-md shadow-lg z-50 max-h-64 overflow-y-auto">
+                    {results.length > 0 ? (
+                      results.map((blog) => (
+                        <Link
+                          key={blog._id}
+                          to={`/blog/${blog._id}`}
+                          className="block px-4 py-2 truncate hover:bg-cyan-100 transition">
+                          {blog.title}
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-gray-500">
+                        No results found
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* === Center Nav === */}
+              <nav className="hidden md:block">
+                <ul className="flex gap-10 text-sm">
+                  {navItems.map((item) => (
+                    <li key={item.name} className="text-gray-400 flex">
+                      <NavLink
+                        to={item.path}
+                        className={({ isActive }) =>
+                          isActive
+                            ? "border-b-2 border-cyan-400 scale-105 text-cyan-500"
+                            : "hover:scale-95 hover:text-cyan-400 transition"
+                        }>
+                        <div className="flex items-center gap-0.5">
+                          {item.icon}
+                          {item.name}
+                        </div>
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </div>
 
             {/*  */}
           </div>
+
+          {/* === Right: Profile & Logout === */}
+          {authUser ? (
+            <div className="flex items-center md:gap-10 gap-2">
+              <div className="relative">
+                <img
+                  src={profileimg}
+                  alt="profile"
+                  onClick={() => setOpen(!open)}
+                  className="h-8 w-8 rounded-full border border-gray-300 cursor-pointer"
+                />
+
+                {open && (
+                  <ul
+                    className="absolute right-0 mt-2 rounded-lg w-40 dropdown bg-white shadow-lg border border-gray-300 text-sm text-gray-700 z-50"
+                    onMouseLeave={() => setOpen(false)}>
+                    <li className="px-4 py-4 text-center font-bold ">
+                      Profile
+                    </li>
+                    <li className="px-4 py-3 font-semibold">
+                      Hi, {authUser?.user?.userName}
+                    </li>
+                    <li className="px-4 py-3 hover:bg-cyan-100 flex justify-between cursor-pointer">
+                      Picture <MdEdit size={20} />
+                    </li>
+                    <li
+                      className="px-4 py-3 hover:bg-red-100 text-red-600 cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        logout();
+                      }}>
+                      Logout
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center md:gap-5 gap-2">
+              <div className="">
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 ${
+                      isActive
+                        ? " scale-105 transition-normal text-cyan-500 "
+                        : "hover:scale-95 hover:text-cyan-400 transition-transform text-gray-400 duration-300"
+                    }`
+                  }>
+                  <MdLogin size={18} />
+                  <span className="text-lg md:block hidden">Login</span>
+                </NavLink>
+              </div>
+
+              <NavLink
+                to="/signup"
+                className={({ isActive }) =>
+                  `bg-blue-600 md:text-[15px] text-[12px] md:px-3 md:py-1 px-2 py-1 rounded-[10px] text-white  transition-all ${
+                    isActive
+                      ? " bg-blue-500 scale-105 transition-normal text-cyan-500"
+                      : "hover:scale-95 hover:text-cyan-400 transition-transform text-gray-400 duration-300"
+                  }`
+                }>
+                Get Started
+              </NavLink>
+            </div>
+          )}
         </div>
+
+        {/* === Mobile Search === */}
+        {showSearch && (
+          <div
+            ref={menuRef}
+            className="absolute top-0 left-0 w-full h-full md:hidden bg-gray-800 flex items-center px-3 z-50 transition-all duration-300">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => query && setShowDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+              placeholder="🔎 Search Blogs..."
+              className="flex-1 py-2 px-4 text-base bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-cyan-500 outline-none"
+            />
+            <button
+              onClick={() => setShowSearch(false)}
+              className="ml-2 text-gray-300 hover:text-cyan-400">
+              <MdClose size={22} />
+            </button>
+
+            {showDropdown && (
+              <div className="absolute top-full left-0 right-0 bg-white text-black mt-1 rounded-md shadow-lg z-50 max-h-64 overflow-y-auto">
+                {results.length > 0 ? (
+                  results.map((blog) => (
+                    <Link
+                      key={blog._id}
+                      to={`/blog/${blog._id}`}
+                      className="block px-4 py-2 truncate hover:bg-cyan-100 transition"
+                      onClick={() => setShowSearch(false)}>
+                      {blog.title}
+                    </Link>
+                  ))
+                ) : (
+                  <div className="px-4 py-2 text-gray-500">
+                    No results found
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </header>
-
-      {/* ========== Mobile Header ========== */}
-      {/* <div className="sticky top-0 z-40 bg-black text-white p-4 md:hidden shadow-md">
-        <div className="flex justify-around text-xs">
-          <Link
-            to="/create-blog"
-            className="flex items-center gap-1 px-2 py-1 border rounded-md hover:border-cyan-400">
-            <MdPostAdd size={15} />
-            Blog
-          </Link>
-
-          <Link
-            to="/"
-            className="flex items-center gap-1 px-2 py-1 border-b-2 border-transparent hover:border-cyan-400">
-            <MdOutlineHome size={15} />
-            Home
-          </Link>
-
-          <Link
-            to="/create-category"
-            className="flex items-center gap-1 px-2 py-1 border rounded-md hover:border-cyan-400">
-            <MdCategory size={15} />
-            Category
-          </Link>
-        </div>
-      </div> */}
     </>
   );
 }
