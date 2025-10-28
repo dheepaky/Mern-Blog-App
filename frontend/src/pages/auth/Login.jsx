@@ -39,7 +39,7 @@ export default function Login() {
       setTimeout(() => {
         toast.success("Welcome Back!");
         navigate("/");
-      }, 300);
+      }, 200);
     },
   });
 
@@ -154,7 +154,7 @@ export default function Login() {
             fullWidth
             size="medium"
             sx={{ textTransform: "uppercase", borderRadius: 3 }}>
-            {isPending ? "Loading.." : "Sign In"}
+            {isPending ? "Sign In.." : "Sign In"}
           </Button>
         </Box>
 

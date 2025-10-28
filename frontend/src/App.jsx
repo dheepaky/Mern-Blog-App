@@ -55,7 +55,7 @@ function App() {
         theme="light"
         transition={Slide}
       />
-      {authUser?.user?.userName}
+      {/* {authUser?.user?.userName} */}
       <Router>
         <Header />
         <ScrollToTop />

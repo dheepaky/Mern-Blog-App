@@ -24,7 +24,10 @@ export default function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [open, setOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const menuRef = useRef();
+  const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -35,7 +38,12 @@ export default function Header() {
     { name: "Contact", icon: <BiEnvelope size={24} />, path: "/contact" },
   ];
 
-  // === Search blogs ===
+  const { data: authUser } = useQuery({
+    queryKey: ["authUser"],
+    queryFn: getAuthUser,
+    retry: false,
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       if (query.trim() === "") {
@@ -82,21 +90,44 @@ export default function Header() {
       toast.success("Logged out successfully");
       queryClient.invalidateQueries(["authUser"]);
       navigate("/");
-      // Optional: Reload the page cleanly after navigation
-      // setTimeout(() => {
-      //   window.location.replace(window.location.origin);
-      // }, 500);
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Logout failed. Try again.");
     },
   });
 
-  const { data: authUser } = useQuery({
-    queryKey: ["authUser"],
-    queryFn: getAuthUser,
-    retry: false,
-  });
+  // === Image Upload Logic ===
+  const handleIconClick = () => fileInputRef.current.click();
+
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handleProfile = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setLoading(true);
+    try {
+      const base64 = await convertToBase64(file);
+      const res = await axios.put(
+        `${API_BASE_URL}/auth/updateprofile/${authUser?.user?._id}`,
+        { profileImg: base64 },
+        { withCredentials: true }
+      );
+
+      toast.success("Profile updated successfully!");
+      queryClient.invalidateQueries(["authUser"]); // Refresh user data
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Profile update failed!");
+      console.error("Profile upload error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -204,12 +235,15 @@ export default function Header() {
           {/* === Right: Profile & Logout === */}
           {authUser ? (
             <div className="flex items-center md:gap-10 gap-2">
+              <span className=" overflow-hidden truncate text-sm sm:text-base md:text-lg text-cyan-100 font-semibold">
+                {authUser?.user?.userName.toUpperCase()}
+              </span>
               <div className="relative">
                 <img
-                  src={profileimg}
+                  src={authUser?.user?.profileImg || profileimg}
                   alt="profile"
                   onClick={() => setOpen(!open)}
-                  className="h-8 w-8 rounded-full border border-gray-300 cursor-pointer"
+                  className="h-10 w-10 md:h-12 md:w-12 rounded-full hover:scale-95  active:scale-95   cursor-pointer"
                 />
 
                 {open && (
@@ -222,8 +256,28 @@ export default function Header() {
                     <li className="px-4 py-3 font-semibold">
                       Hi, {authUser?.user?.userName}
                     </li>
-                    <li className="px-4 py-3 hover:bg-cyan-100 flex justify-between cursor-pointer">
-                      Picture <MdEdit size={20} />
+                    <li className="px-4 py-3 hover:bg-cyan-100 flex justify-between items-center cursor-pointer">
+                      <span>Picture</span>
+                      <div className="flex items-center gap-3">
+                        {loading ? (
+                          <span className="text-sm text-gray-500">
+                            Uploading...
+                          </span>
+                        ) : (
+                          <MdEdit
+                            size={20}
+                            onClick={handleIconClick}
+                            className="cursor-pointer text-cyan-700 hover:text-cyan-900 transition"
+                          />
+                        )}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleProfile}
+                          className="hidden"
+                        />
+                      </div>
                     </li>
                     <li
                       className="px-4 py-3 hover:bg-red-100 text-red-600 cursor-pointer"
@@ -260,7 +314,7 @@ export default function Header() {
                   `bg-blue-600 md:text-[15px] text-[12px] md:px-3 md:py-1 px-2 py-1 rounded-[10px] text-white  transition-all ${
                     isActive
                       ? " bg-blue-500 scale-105 transition-normal text-cyan-500"
-                      : "hover:scale-95 hover:text-cyan-400 transition-transform text-gray-400 duration-300"
+                      : "hover:scale-95 hover:text-cyan-300 transition-transform text-gray-400 duration-300"
                   }`
                 }>
                 Get Started

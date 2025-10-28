@@ -1,6 +1,7 @@
 import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
+import cloudinary from "cloudinary";
 
 export const registerController = async (req, res) => {
   try {
@@ -99,3 +100,47 @@ export const getMe = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const updateProfileImg = async (req, res) => {
+  try {
+    const { profileImg } = req.body;
+    const userId = req.params.id;
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    let uploadedUrl = user.profileImg; // keep old image if none provided
+    if (profileImg) {
+      const uploadedResponse = await cloudinary.uploader.upload(profileImg, {
+        folder: "cloudinary-project",
+      });
+      uploadedUrl = uploadedResponse.secure_url;
+    }
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      { profileImg: uploadedUrl },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: "Profile image updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error in updateProfileImg controller:", error.message);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// export const viewimg = async (req, res) => {
+//   try {
+//     const uploads = await cloudinarymodel.find().sort({ createdAt: -1 });
+//     res.status(201).json(uploads);
+//     console.log(uploads);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };

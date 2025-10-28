@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { API_BASE_URL } from "../baseurl/BaseUrl";
-
+import { toast } from "react-toastify";
 export default function CreateBlog() {
   const [categories, setcategory] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [img, setImage] = useState(null);
   const [category, setCategory] = useState("");
@@ -31,7 +32,7 @@ export default function CreateBlog() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     // if (!preview) return;
     try {
       const response = await axios.post(
@@ -46,9 +47,13 @@ export default function CreateBlog() {
           withCredentials: true,
         }
       );
-      console.log("Blog created:", response.data);
-      navigate("/");
+      // console.log("Blog created:", response.data);
+      setTimeout(() => {
+        toast.success("Blog Created Successfully");
+        navigate("/");
+      }, 200);
     } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
       console.error("error in Createblog", error);
     }
     // console.log(img);
@@ -117,8 +122,8 @@ export default function CreateBlog() {
         <ReactQuill theme="snow" value={content} onChange={setContent} />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md">
-          Publish Blog
+          className="w-full cursor-pointer bg-blue-600 text-white py-2 rounded-md">
+          {loading ? "Publish Blog...." : "Publish Blog"}
         </button>
       </form>
     </div>

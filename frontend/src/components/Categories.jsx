@@ -7,6 +7,7 @@ import BlogSkeleton from "../pages/BlogSkeleton";
 
 export default function Categories() {
   const [categories, setcategory] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [categoryList, setCategoryList] = useState([]);
 
@@ -49,6 +50,7 @@ export default function Categories() {
 
       <div className="w-full md:w-[70%]">
         <h1 className="text-3xl font-bold mb-6">{categories.name}</h1>
+
         {categories.length === 0 && (
           <p className="text-center py-10 text-2xl w-full">Empty Blog!</p>
         )}
@@ -67,7 +69,9 @@ export default function Categories() {
               <NavLink
                 to={`/category/${category._id}`}
                 className={({ isActive }) =>
-                  `block p-3 text-center py-4 rounded-md cursor-pointer transition-all duration-300 ${
+                  ` block p-3 text-center font-semibold bg-gradient-to-r from-cyan-700 via-cyan-600 to-cyan-700 
+bg-clip-text text-transparent tracking-normal drop-shadow-lg 
+hover:tracking-[0.2px]  py-4 rounded-md cursor-pointer transition-all duration-300 ${
                     isActive
                       ? "bg-gray-300  scale-105 font-semibold"
                       : "bg-gray-100 hover:bg-gray-200"

@@ -10,21 +10,42 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { API_BASE_URL } from "../../baseurl/BaseUrl";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Signup() {
-  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (newData) => {
+      const res = await axios.post(`${API_BASE_URL}/auth/register`, newData, {
+        withCredentials: true,
+      });
+      return res.data;
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message || error.message || "Register failed!"
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      setTimeout(() => {
+        toast.success("Welcome to Blogs!");
+        navigate("/");
+      }, 200);
+    },
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Signup with:", { name, email, password });
-
-    // Reset form
-    setName("");
-    setEmail("");
-    setPassword("");
+    mutate({ userName, email, password });
   };
 
   const togglePasswordVisibility = () => {
@@ -76,8 +97,8 @@ export default function Signup() {
             label="UserName"
             type="text"
             required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             variant="outlined"
           />
 
@@ -158,7 +179,7 @@ export default function Signup() {
             color="primary"
             size="large"
             sx={{ textTransform: "uppercase", borderRadius: 3 }}>
-            Sign Up
+            {isPending ? " Sign Up..." : "Sign Up"}
           </Button>
         </Box>
 

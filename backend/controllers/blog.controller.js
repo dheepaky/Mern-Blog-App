@@ -42,19 +42,35 @@ export const createblog = async (req, res) => {
 
 export const viewblog = async (req, res) => {
   try {
-    const blogs = await blogmodel.find().sort({ createdAt: -1 });
+    const blogs = await blogmodel
+      .find()
+      .populate("author", "userName email profileImg")
+      .sort({ createdAt: -1 });
     res.status(200).json(blogs);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 export const singleblog = async (req, res) => {
+  const blogId = req.params.id;
+
   try {
-    const blog = await blogmodel.findById(req.params.id);
+    const blog = await blogmodel
+      .findById(blogId)
+      .populate("author", "userName email profileImg");
+
     if (!blog) {
       return res.status(404).json({ message: "Blog not found" });
     }
-    res.status(201).json(blog);
+
+    const otherBlogs = await blogmodel
+      .find({ _id: { $ne: blogId } }) // exclude the current blog
+      .populate("author", "userName email profileImg")
+      .populate("category", "name")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.status(200).json({ blog, otherBlogs });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -123,6 +139,7 @@ export const getpostbycategory = async (req, res) => {
     // fetch post
     const blogs = await blogmodel
       .find({ category: categoryid })
+      .populate("author", "userName email profileImg")
       .populate("category", "name")
       .sort({ createdAt: -1 });
     res.status(200).json(blogs);

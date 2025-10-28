@@ -2,8 +2,10 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../baseurl/BaseUrl";
+import { toast } from "react-toastify";
 
 export default function CreateCategory() {
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
@@ -13,19 +15,21 @@ export default function CreateCategory() {
   // });
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `${API_BASE_URL}/category/create-category`,
         {
           name,
           description,
-        }
+        },
+        { withCredentials: true }
       );
-
-      console.log("Category created:", response.data);
-
-      navigate("/");
+      // console.log("Category created:", response.data);
+      setTimeout(() => {
+        toast.success("Category Created Successfully");
+        navigate("/");
+      }, 200);
     } catch (error) {
       console.error("Error in create-category:", error.message);
     }
@@ -67,8 +71,8 @@ export default function CreateCategory() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-500 text-white py-2 rounded-md transition">
-          Create Category
+          className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-500 text-white py-2 rounded-md transition">
+          {loading ? "Create Category...." : "Create Category"}
         </button>
       </form>
     </div>
