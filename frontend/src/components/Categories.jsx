@@ -45,7 +45,7 @@ export default function Categories() {
   if (loading) return <BlogSkeleton />;
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-5">
+    <div className="flex flex-col md:flex-row gap-6 p-5 create-page">
       {/* Left Section - category List */}
 
       <div className="w-full md:w-[70%]">

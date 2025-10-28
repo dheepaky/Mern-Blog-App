@@ -84,7 +84,7 @@ export default function BlogDetails() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-6 p-5">
+      <div className="flex flex-col md:flex-row gap-6 p-5 create-page">
         {/* Left Section - Blog List */}
         <div className="w-full md:w-[70%]">
           <div className="border border-gray-300 rounded-lg p-4 mb-6 shadow-sm bg-white">

@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <div className="p-6 max-w-3xl mx-auto">
+    <div className="p-6 max-w-3xl mx-auto page">
       <h1 className="text-3xl font-bold mb-4">About Us</h1>
       <p className="text-gray-700 leading-relaxed">
         Welcome to our Blog App! 🚀 This platform allows writers, developers,

@@ -215,10 +215,10 @@ export default function Header() {
                         to={item.path}
                         className={({ isActive }) =>
                           isActive
-                            ? "border-b-2 border-cyan-400 scale-105 text-cyan-500"
+                            ? "border-b border-cyan-400 scale-105 text-cyan-500"
                             : "hover:scale-95 hover:text-cyan-400 transition"
                         }>
-                        <div className="flex items-center gap-0.5">
+                        <div className="flex items-center gap-0.5 p-1">
                           {item.icon}
                           {item.name}
                         </div>

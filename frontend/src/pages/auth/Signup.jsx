@@ -53,7 +53,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center px-4">
+    <div className="min-h-screen pageout bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center px-4">
       <Paper
         elevation={6}
         className="w-full max-w-md rounded-2xl"

@@ -39,7 +39,7 @@ export default function CreateCategory() {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 mt-10">
+    <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 mt-10 pagedown">
       <h1 className="text-2xl font-bold mb-6 text-center">Create Category</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">

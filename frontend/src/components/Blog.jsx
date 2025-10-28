@@ -77,7 +77,7 @@ export default function Blog() {
   const isAuthenticated = authUser;
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-5">
+    <div className="flex flex-col md:flex-row gap-6 p-5 page">
       {/* Left Section - Blog List */}
       <div className="w-full md:w-[70%]">
         <h1 className="text-3xl font-bold mb-6">Recent Blogs</h1>

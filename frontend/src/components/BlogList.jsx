@@ -3,7 +3,7 @@ import profileimg from "../../src/assets/avatar-placeholder.png";
 
 export default function BlogList({ blog }) {
   return (
-    <div className="border border-gray-300 rounded-lg p-4 mb-6 shadow-sm bg-white">
+    <div className="border border-gray-300 rounded-lg p-4 mb-6 shadow-sm bg-white create-page">
       <div className="flex flex-wrap items-center gap-2">
         <img
           src={blog.author?.profileImg || profileimg}

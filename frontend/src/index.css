@@ -34,3 +34,68 @@
 html {
   scroll-behavior: smooth;
 }
+
+.page {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideIn 0.7s ease-out forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pagedown {
+  opacity: 0;
+  transform: translateY(-190px);
+  animation: fadeSlideInDown 0.7s ease-out forwards;
+}
+
+@keyframes fadeSlideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-190px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pageout {
+  animation: fadezoom 0.7s ease-in-out both;
+}
+
+@keyframes fadezoom {
+  from {
+    opacity: 0;
+    scale: 1.95;
+    translate: 0 4rem;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+}
+
+.create-page {
+  animation: zoomIn 0.5s ease-out forwards;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -70,7 +70,7 @@ export default function CreateBlog() {
   // const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6">
+    <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6 pagedown">
       <h1 className="text-2xl font-bold mb-6 text-center text-gray-700">
         Create New Blog
       </h1>
