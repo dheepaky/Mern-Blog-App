@@ -8,7 +8,7 @@
 
 A powerful, production-ready **Blog CMS** built with the **MERN** stack. This application demonstrates best practices for **secure authentication**, scalable **media handling**, and a fully responsive user experience.
 
-* **🌐 Check out the Live Demo:** [Link to Deployed App (https://blogwebapp.koyeb.app/)]()
+* **🌐 Check out the Live Demo:** [https://blogwebapp.koyeb.app/] (https://blogwebapp.koyeb.app/)
 
 ---
 
