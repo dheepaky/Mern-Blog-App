@@ -136,7 +136,7 @@ hover:tracking-[1px] transition-all duration-300 mb-5">
               ) : null}
             </div>
 
-            <div className="prose">
+            <div className="prose bg-gray-50">
               {/* Add 'prose' class for basic typography */}
               <ContentView content={blog.content} />
             </div>

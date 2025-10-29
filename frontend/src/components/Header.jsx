@@ -134,7 +134,7 @@ export default function Header() {
       <header className="relative p-3 md:px-5 sticky top-0 bg-gray-800 text-white shadow-md z-50">
         <div className="flex items-center justify-between">
           {/* === Left: Logo + Search === */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center gap-2">
               <img
                 src={blogLogo}
@@ -145,9 +145,9 @@ export default function Header() {
             </Link>
 
             {/* Mobile search icon */}
-            <div className="flex gap-7 items-center">
+            <div className="flex gap-3 items-center">
               <div
-                className="md:hidden block p-1 cursor-pointer ml-5"
+                className="md:hidden block p-1 cursor-pointer ml-3"
                 onClick={() => setShowSearch(true)}>
                 <MdSearch
                   className="hover:text-cyan-400 text-gray-400"
@@ -156,7 +156,7 @@ export default function Header() {
               </div>
 
               <div className="md:hidden block">
-                <ul className="flex gap-6 text-sm ">
+                <ul className="flex gap-3 text-sm ">
                   {navItems.map((item) => (
                     <li key={item.name} className="text-gray-400">
                       <NavLink
@@ -175,8 +175,8 @@ export default function Header() {
             </div>
 
             {/* Desktop search */}
-            <div className="flex items-center gap-28">
-              <div className="relative w-full max-w-md hidden md:block space-x-5">
+            <div className="flex items-center   ">
+              <div className="relative  hidden md:block  ">
                 <input
                   type="text"
                   value={query}
@@ -184,7 +184,7 @@ export default function Header() {
                   onFocus={() => query && setShowDropdown(true)}
                   onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                   placeholder="🔎 Search Blogs..."
-                  className="w-full px-4 py-2 text-base bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-cyan-500 outline-none"
+                  className="max-w-md  px-3  py-2 text-base bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-cyan-500 outline-none"
                 />
                 {showDropdown && (
                   <div className="absolute left-0 right-0 bg-white text-black mt-1 rounded-md shadow-lg z-50 max-h-64 overflow-y-auto">
@@ -205,37 +205,39 @@ export default function Header() {
                   </div>
                 )}
               </div>
-
-              {/* === Center Nav === */}
-              <nav className="hidden md:block">
-                <ul className="flex gap-10 text-sm">
-                  {navItems.map((item) => (
-                    <li key={item.name} className="text-gray-400 flex">
-                      <NavLink
-                        to={item.path}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "border-b border-cyan-400 scale-105 text-cyan-500"
-                            : "hover:scale-95 hover:text-cyan-400 transition"
-                        }>
-                        <div className="flex items-center gap-0.5 p-1">
-                          {item.icon}
-                          {item.name}
-                        </div>
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
             </div>
 
             {/*  */}
           </div>
 
+          {/* === Center Nav === */}
+          <div className="flex justify-center ">
+            <nav className="hidden md:block">
+              <ul className="flex md:gap-5 text-sm">
+                {navItems.map((item) => (
+                  <li key={item.name} className="text-gray-400 flex">
+                    <NavLink
+                      to={item.path}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "border-b border-cyan-400 scale-105 text-cyan-500"
+                          : "hover:scale-95 hover:text-cyan-400 transition"
+                      }>
+                      <div className="flex items-center gap-0.5 p-1">
+                        {item.icon}
+                        {item.name}
+                      </div>
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
           {/* === Right: Profile & Logout === */}
           {authUser ? (
-            <div className="flex items-center md:gap-10 gap-2">
-              <span className=" overflow-hidden truncate text-sm sm:text-base md:text-lg text-cyan-100 font-semibold">
+            <div className="flex items-center md:gap-5 gap-2">
+              <span className=" overflow-hidden truncate text-sm sm:text-base md:text-[16px] text-cyan-100 font-semibold">
                 {authUser?.user?.userName.toUpperCase()}
               </span>
               <div className="relative">
@@ -243,7 +245,7 @@ export default function Header() {
                   src={authUser?.user?.profileImg || profileimg}
                   alt="profile"
                   onClick={() => setOpen(!open)}
-                  className="h-10 w-10 md:h-12 md:w-12 rounded-full hover:scale-95  active:scale-95   cursor-pointer"
+                  className="h-9 w-9 md:h-12 md:w-12 rounded-full hover:scale-95  active:scale-95   cursor-pointer"
                 />
 
                 {open && (
@@ -311,7 +313,7 @@ export default function Header() {
               <NavLink
                 to="/signup"
                 className={({ isActive }) =>
-                  `bg-blue-600 md:text-[15px] text-[12px] md:px-3 md:py-1 px-2 py-1 rounded-[10px] text-white  transition-all ${
+                  `bg-blue-600 md:text-[15px] text-[10px] md:px-3 md:py-1 px-2 py-1 rounded-[10px] text-white  transition-all ${
                     isActive
                       ? " bg-blue-500 scale-105 transition-normal text-cyan-500"
                       : "hover:scale-95 hover:text-cyan-300 transition-transform text-gray-400 duration-300"
@@ -322,7 +324,6 @@ export default function Header() {
             </div>
           )}
         </div>
-
         {/* === Mobile Search === */}
         {showSearch && (
           <div
