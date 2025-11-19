@@ -23,7 +23,7 @@ const __dirname = path.resolve();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["https://blogwebapp.koyeb.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
@@ -41,17 +41,33 @@ app.use("/api/auth", userRouter);
 
 app.use("/", sitemapRoute);
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-  app.get(/.*/, (req, res) => {
-    res.sendFile(path.resolve(__dirname, "/frontend", "dist", "index.html"));
+//   app.get(/.*/, (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "/frontend", "dist", "index.html"));
+//   });
+// }
+
+// app.get("/", (req, res) => {
+//   res.send("API is Running.........");
+// });
+
+if (process.env.NODE_ENV === "production") {
+  const frontendPath = path.join(__dirname, "/frontend/dist");
+
+  app.use(express.static(frontendPath));
+
+  // React Router Catch-All (must be last)
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+} else {
+  // Development root route
+  app.get("/", (req, res) => {
+    res.send("API is Running.........");
   });
 }
-
-app.get("/", (req, res) => {
-  res.send("API is Running.........");
-});
 
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
