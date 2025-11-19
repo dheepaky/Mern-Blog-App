@@ -48,7 +48,7 @@ hover:tracking-[0.2px] transition-all duration-300">
           : blog.content}
       </div> */}
 
-      <Link to={`/blog/${blog._id}`}>
+      <Link to={`/blog/${blog.slug}`}>
         <button className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 border-0 focus:0 text-white p-2 my-5 rounded-md cursor-pointer ">
           Read More
         </button>

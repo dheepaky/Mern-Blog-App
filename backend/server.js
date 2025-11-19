@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
+import sitemapRoute from "./routes/sitemap.js";
 
 dotenv.config();
 
@@ -37,6 +38,8 @@ const PORT = process.env.PORT || 5000;
 app.use("/api/blog", blogrouter);
 app.use("/api/category", categoryrouter);
 app.use("/api/auth", userRouter);
+
+app.use("/", sitemapRoute);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));

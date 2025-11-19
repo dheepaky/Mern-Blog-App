@@ -192,7 +192,7 @@ export default function Header() {
                       results.map((blog) => (
                         <Link
                           key={blog._id}
-                          to={`/blog/${blog._id}`}
+                          to={`/blog/${blog.slug}`}
                           className="block px-4 py-2 truncate hover:bg-cyan-100 transition">
                           {blog.title}
                         </Link>

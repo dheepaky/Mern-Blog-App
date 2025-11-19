@@ -24,6 +24,7 @@ import CircularProgress from "@mui/joy/CircularProgress";
 
 import OpenIconSpeedDial from "./components/OpenIconSpeedDial";
 import { useQuery } from "@tanstack/react-query";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const { data: authUser, isLoading } = useQuery({
@@ -39,11 +40,12 @@ function App() {
       </div>
     );
   }
+  const isMobile = window.innerWidth < 768;
 
   return (
     <>
       <ToastContainer
-        position="top-right"
+        position={isMobile ? "top-center" : "top-right"}
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -62,8 +64,9 @@ function App() {
         <OpenIconSpeedDial />
         <Routes>
           <Route path="/" element={<Blog />} />
-          <Route path="/blog/:id" element={<BlogDetails />} />
-          <Route path="/category/:id" element={<Categories />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogDetails />} />
+          <Route path="/category/:slug" element={<Categories />} />
           <Route path="/search/:query" element={<SearchResults />} />
 
           <Route path="/contact" element={<Contact />} />
@@ -88,6 +91,7 @@ function App() {
             path="/signup"
             element={!authUser ? <Signup /> : <Navigate to="/" />}
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </Router>

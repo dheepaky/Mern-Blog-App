@@ -10,11 +10,14 @@ import BlogDetailSkeleton from "../pages/BlogDetailSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import profileimg from "../../src/assets/avatar-placeholder.png";
 
+import { Helmet } from "react-helmet-async";
+
 export default function BlogDetails() {
   const [loading, setLoading] = useState(true);
   const [blog, setblog] = useState(null);
   const [suggestBlog, setSuggestBlog] = useState(null);
   const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
 
   const { data: authUser } = useQuery({
@@ -25,8 +28,8 @@ export default function BlogDetails() {
 
   const fetchblog = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      const response = await axios.get(`${API_BASE_URL}/blog/blogs/${id}`);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const response = await axios.get(`${API_BASE_URL}/blog/blogs/${slug}`);
       const data = response.data;
       setblog(data.blog);
       setSuggestBlog(data.otherBlogs);
@@ -39,7 +42,7 @@ export default function BlogDetails() {
 
   useEffect(() => {
     fetchblog();
-  }, [id]);
+  }, [slug]);
 
   const handleDelete = async (e) => {
     e.preventDefault();
@@ -49,7 +52,7 @@ export default function BlogDetails() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${API_BASE_URL}/blog/blogs/${id}`, {
+      await axios.delete(`${API_BASE_URL}/blog/blogs/${blog._id}`, {
         withCredentials: true,
       });
       toast.success("Blog deleted successfully");
@@ -84,9 +87,29 @@ export default function BlogDetails() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-6 p-5 create-page">
+      <Helmet>
+        <title>{blog.title} | MERN Blog App</title>
+        <link rel="canonical" href={window.location.href} />
+        <meta name="description" content={blog.content?.slice(0, 150)} />
+
+        {/* Open Graph for Facebook / WhatsApp */}
+        <meta property="og:title" content={blog.title} />
+        <meta property="og:description" content={blog.content?.slice(0, 150)} />
+        <meta property="og:image" content={blog.img} />
+        <meta property="og:type" content="article" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:title" content={blog.title} />
+        <meta
+          name="twitter:description"
+          content={blog.content?.slice(0, 150)}
+        />
+        <meta name="twitter:image" content={blog.img} />
+      </Helmet>
+
+      <div className="flex flex-col md:flex-row gap-6 p-5 create-page ">
         {/* Left Section - Blog List */}
-        <div className="w-full md:w-[70%]">
+        <div className="w-full md:w-[70%] ">
           <div className="border border-gray-300 rounded-lg p-4 mb-6 shadow-sm bg-white">
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <img
@@ -153,7 +176,7 @@ hover:tracking-[1px] transition-all duration-300 mb-5">
             {suggestBlog && suggestBlog.length > 0 ? (
               suggestBlog.map((item) => (
                 <div
-                  className="bg-gray-100 mb-5 p-2  shadow-gray-300 rounded-md shadow-sm"
+                  className="bg-gray-100  mb-5 p-2 page shadow-gray-300 rounded-md shadow-sm"
                   key={item._id}>
                   <div className="flex flex-wrap items-center gap-2 ">
                     <img
@@ -166,7 +189,7 @@ hover:tracking-[1px] transition-all duration-300 mb-5">
                     </h2>
                   </div>
                   <NavLink
-                    to={`/blog/${item._id}`}
+                    to={`/blog/${item.slug}`}
                     className="block hover:opacity-90 items-center flex justify-center gap-2">
                     {item.img && (
                       <img

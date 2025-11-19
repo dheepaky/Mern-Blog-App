@@ -51,12 +51,15 @@ export const viewblog = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// getblogbySlug
+
 export const singleblog = async (req, res) => {
-  const blogId = req.params.id;
+  const slug = req.params.slug;
 
   try {
     const blog = await blogmodel
-      .findById(blogId)
+      .findOne({ slug })
       .populate("author", "userName email profileImg");
 
     if (!blog) {
@@ -64,7 +67,7 @@ export const singleblog = async (req, res) => {
     }
 
     const otherBlogs = await blogmodel
-      .find({ _id: { $ne: blogId } }) // exclude the current blog
+      .find({ slug: { $ne: slug } }) // exclude the current blog
       .populate("author", "userName email profileImg")
       .populate("category", "name")
       .sort({ createdAt: -1 })
@@ -129,16 +132,17 @@ export const updateblog = async (req, res) => {
 
 export const getpostbycategory = async (req, res) => {
   try {
-    const categoryid = req.params.categoryid;
+    const slug = req.params.slug;
     // validate
-    const categoryexist = await categorymodel.findById(categoryid);
+    const categoryexist = await categorymodel.findOne({ slug });
 
     if (!categoryexist) {
       return res.status(404).json({ message: "invalid category" });
     }
     // fetch post
+
     const blogs = await blogmodel
-      .find({ category: categoryid })
+      .find({ category: categoryexist._id })
       .populate("author", "userName email profileImg")
       .populate("category", "name")
       .sort({ createdAt: -1 });

@@ -19,8 +19,8 @@ router.post("/create-blog", protectRoute, createblog);
 router.get("/blogs", viewblog);
 router.delete("/blogs/:id", protectRoute, deleteblog);
 router.put("/blogs/:id", protectRoute, updateblog);
-router.get("/blogs/:id", singleblog);
-router.get("/category/:categoryid", getpostbycategory);
+router.get("/blogs/:slug", singleblog);
+router.get("/category/:slug", getpostbycategory);
 router.get("/search", Searchblog);
 
 export default router;
