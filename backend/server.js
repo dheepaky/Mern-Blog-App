@@ -54,16 +54,10 @@ app.use("/", sitemapRoute);
 // });
 
 if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "/frontend/dist");
-
-  app.use(express.static(frontendPath));
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is Running.........");
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 }
 
