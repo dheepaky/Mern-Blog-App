@@ -58,12 +58,10 @@ if (process.env.NODE_ENV === "production") {
 
   app.use(express.static(frontendPath));
 
-  // React Router Catch-All (must be last)
   app.get("*", (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 } else {
-  // Development root route
   app.get("/", (req, res) => {
     res.send("API is Running.........");
   });
