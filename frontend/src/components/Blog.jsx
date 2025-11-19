@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { getAuthUser } from "../api/Auth";
 import { useQuery } from "@tanstack/react-query";
 
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 export default function Blog() {
   const [loading, setLoading] = useState(true);

@@ -10,7 +10,7 @@ import BlogDetailSkeleton from "../pages/BlogDetailSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import profileimg from "../../src/assets/avatar-placeholder.png";
 
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 export default function BlogDetails() {
   const [loading, setLoading] = useState(true);
