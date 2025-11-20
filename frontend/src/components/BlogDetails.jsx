@@ -123,13 +123,13 @@ export default function BlogDetails() {
             </div>
 
             <div className="flex items-center justify-between">
-              <h2
+              <h1
                 className="text-2xl md:text-3xl font-extrabold text-center 
 bg-gradient-to-r from-cyan-700 via-cyan-600 to-cyan-700 
 bg-clip-text text-transparent tracking-normal drop-shadow-lg 
 hover:tracking-[1px] transition-all duration-300 mb-5">
                 {blog.title}
-              </h2>
+              </h1>
 
               {isMyBlog && (
                 <button
@@ -159,10 +159,10 @@ hover:tracking-[1px] transition-all duration-300 mb-5">
               ) : null}
             </div>
 
-            <div className="prose bg-gray-50">
+            <h2 className="prose bg-gray-50 md:text-lg text-[17px]">
               {/* Add 'prose' class for basic typography */}
               <ContentView content={blog.content} />
-            </div>
+            </h2>
           </div>
         </div>
 

@@ -33,7 +33,7 @@ hover:tracking-[0.2px] transition-all duration-300">
       </div>
 
       <div className="mt-4 text-[#200028] font-semibold">
-        <div
+        <h1
           dangerouslySetInnerHTML={{
             __html:
               blog.content.length > 100
