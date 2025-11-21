@@ -92,19 +92,43 @@ export default function BlogDetails() {
         <link rel="canonical" href={window.location.href} />
         <meta name="description" content={blog.content?.slice(0, 150)} />
 
-        {/* Open Graph for Facebook / WhatsApp */}
+        {/* Open Graph */}
         <meta property="og:title" content={blog.title} />
         <meta property="og:description" content={blog.content?.slice(0, 150)} />
         <meta property="og:image" content={blog.img} />
         <meta property="og:type" content="article" />
 
-        {/* Twitter Cards */}
+        {/* Twitter */}
         <meta name="twitter:title" content={blog.title} />
         <meta
           name="twitter:description"
           content={blog.content?.slice(0, 150)}
         />
         <meta name="twitter:image" content={blog.img} />
+
+        {/* ✅ JSON-LD */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              headline: blog?.title,
+              description: blog?.content?.slice(0, 150),
+              image: blog?.img,
+              author: {
+                "@type": "Person",
+                name: blog?.author?.userName,
+              },
+              datePublished: blog?.createdAt,
+              dateModified: blog?.updatedAt,
+              mainEntityOfPage: {
+                "@type": "WebPage",
+                "@id": window.location.href,
+              },
+            }),
+          }}
+        />
       </Helmet>
 
       <div className="flex flex-col md:flex-row gap-6 p-5 create-page ">
@@ -153,7 +177,7 @@ hover:tracking-[1px] transition-all duration-300 mb-5">
                 <img
                   // src={`${API_BASE_URL}${blog.img}`}
                   src={blog.img}
-                  alt="blog image"
+                  alt="blog_image"
                   className="w-fit h-80 object-contain rounded-md mb-3 "
                 />
               ) : null}

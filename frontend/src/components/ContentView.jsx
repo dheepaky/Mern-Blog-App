@@ -7,7 +7,7 @@ export default function ContentView({ content }) {
 
   return (
     <div className="ql-snow">
-      <div
+      <h2
         className="ql-editor"
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
