@@ -6,7 +6,7 @@
 | :---: | :---: | :---: | :---: | :---: |
 | [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js)](https://nodejs.org/) | [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/) | [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/) | [![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary)](https://cloudinary.com/) | [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) |
 
-A powerful, production-ready **Blog CMS** built with the **MERN** stack. This application demonstrates best practices for **secure authentication**, scalable **media handling**, and a fully responsive user experience.
+A powerful, production-ready **Blog CMS** built with the **MERN** stack. This application demonstrates best practices for **secure authentication**, scalable **media handling**, and a fully responsive user experience.Perfect for learning MERN or using as a production-level blogging platform
 
 * **🌐 Check out the Live Demo:** [https://blogwebapp.koyeb.app/](https://blogwebapp.koyeb.app/)
 
@@ -23,6 +23,8 @@ A powerful, production-ready **Blog CMS** built with the **MERN** stack. This ap
 * **🖼️ Scalable Media:** Uses **Cloudinary** to offload and efficiently serve all uploaded post images.
 
 * **📱 Fully Responsive:** Crafted with **Tailwind CSS** and **Material-UI (MUI)** for a clean, mobile-first design.
+
+* **🌍 SEO-friendly blogging structure:** 
 
 * **🏷️ Intelligent Filtering:** Quickly search posts
 
