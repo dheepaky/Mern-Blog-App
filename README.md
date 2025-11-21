@@ -1,4 +1,4 @@
-# 🚀 MERN Blog App: The Full-Stack Content Hub
+# 🚀 MERN Blog App: The Full-Stack Content Hub with SEO Optimization
 
 ## Build Your Digital Publication on a Robust Stack
 
@@ -49,6 +49,7 @@ This project leverages a modern, decoupled architecture across the MERN stack.
 | **Tailwind CSS** | Utility-first CSS framework for rapid, responsive styling. | 
 | **Material-UI (MUI)** | High-quality, pre-built components for complex UI elements. | 
 | **Axios** | Promise-based HTTP client for API interaction. | 
+| **React Helmet** | Search engine optimization. | 
 
 ### Backend (Server) - `Node.js & Express` ⚙️
 
