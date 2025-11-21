@@ -26,11 +26,11 @@ A powerful, production-ready **Blog CMS** built with the **MERN** stack. This ap
 
 * **🌍 SEO-friendly blogging structure:**  search engine optimization features
   
-**⚡ React Helmet:** dynamic page titles, meta descriptions, keywords, OG previews, Twitter Cards, etc.
+    **⚡ React Helmet:** dynamic page titles, meta descriptions, keywords, OG previews, Twitter Cards, etc.
 
-**🤖 robots.txt:** properly configured to manage crawler access, indexing rules, and bot behavior.
+    **🤖 robots.txt:** properly configured to manage crawler access, indexing rules, and bot behavior.
 
-**🗺️ Auto-Generated sitemap.xml:** – dynamically generated from backend routes/posts, ensuring faster indexing by Google, Bing, and other search engines.
+    **🗺️ Auto-Generated sitemap.xml:** – dynamically generated from backend routes/posts, ensuring faster indexing by Google, Bing, and other search engines.
 
 
 * **🏷️ Intelligent Filtering:** Quickly search posts
