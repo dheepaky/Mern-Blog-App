@@ -1,30 +1,9 @@
 import { Link } from "react-router-dom";
 import profileimg from "../../src/assets/avatar-placeholder.png";
-import { Helmet } from "react-helmet";
 
 export default function BlogList({ blog }) {
   return (
     <>
-      <Helmet>
-        <title>{blog.title} | MERN Blog App</title>
-        <link rel="canonical" href={window.location.href} />
-        <meta name="description" content={blog.content?.slice(0, 150)} />
-
-        {/* Open Graph for Facebook / WhatsApp */}
-        <meta property="og:title" content={blog.title} />
-        <meta property="og:description" content={blog.content?.slice(0, 150)} />
-        <meta property="og:image" content={blog.img} />
-        <meta property="og:type" content="article" />
-
-        {/* Twitter Cards */}
-        <meta name="twitter:title" content={blog.title} />
-        <meta
-          name="twitter:description"
-          content={blog.content?.slice(0, 150)}
-        />
-        <meta name="twitter:image" content={blog.img} />
-      </Helmet>
-
       <div className="border border-gray-300 rounded-lg p-4 mb-6 shadow-sm bg-white create-page">
         <div className="flex flex-wrap items-center gap-2">
           <img

@@ -82,7 +82,7 @@ export default function Blog() {
     <>
       <Helmet>
         <title>Blog WebApp</title>
-        <meta name="description" content="MERN Blog WebApp" />
+        <meta name="description" content="MERN Blog WebApp with SEO" />
         <link rel="canonical" href={window.location.href} />
       </Helmet>
 
