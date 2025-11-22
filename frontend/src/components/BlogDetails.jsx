@@ -131,13 +131,13 @@ export default function BlogDetails() {
         />
 
         {/* ✅ JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(blogSchema),
-          }}
-        />
       </Helmet>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(blogSchema),
+        }}
+      />
 
       <div className="flex flex-col md:flex-row gap-6 p-5 create-page ">
         {/* Left Section - Blog List */}
