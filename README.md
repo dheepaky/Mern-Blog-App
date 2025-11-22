@@ -1,4 +1,4 @@
-# 🚀 MERN Blog App: The Full-Stack Content Hub with SEO Optimization
+# 🚀 MERN Blog App: The Full-Stack Content Hub with Search Engine Optimization
 
 
 | Backend | Frontend | Database | Images | License | 
