@@ -69,18 +69,14 @@ app.use("/", sitemapRoute);
 // }
 
 if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "frontend", "dist");
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-  // Serve static files
-  app.use(express.static(distPath));
-
-  // Wildcard for React SPA — safe
   app.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 } else {
   app.get("/", (req, res) => {
-    res.send("API is Running...");
+    res.send("API is Running.........");
   });
 }
 
