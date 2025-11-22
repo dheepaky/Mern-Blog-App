@@ -54,17 +54,33 @@ app.use("/", sitemapRoute);
 //   });
 // }
 
+// if (process.env.NODE_ENV === "production") {
+//   const FRONTEND_PATH = path.join(__dirname, "frontend/dist");
+
+//   app.use(express.static(FRONTEND_PATH));
+
+//   app.get(/.*/, (req, res) => {
+//     res.sendFile(path.join(FRONTEND_PATH, "index.html"));
+//   });
+// } else {
+//   app.get("/", (req, res) => {
+//     res.send("API is Running.........");
+//   });
+// }
+
 if (process.env.NODE_ENV === "production") {
-  const FRONTEND_PATH = path.join(__dirname, "frontend/dist");
+  const distPath = path.join(__dirname, "frontend", "dist");
 
-  app.use(express.static(FRONTEND_PATH));
+  // Serve static files
+  app.use(express.static(distPath));
 
-  app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(FRONTEND_PATH, "index.html"));
+  // Wildcard for React SPA — safe
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
   });
 } else {
   app.get("/", (req, res) => {
-    res.send("API is Running.........");
+    res.send("API is Running...");
   });
 }
 
