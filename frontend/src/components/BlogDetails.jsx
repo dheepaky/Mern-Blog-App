@@ -85,6 +85,24 @@ export default function BlogDetails() {
   // console.log("check", isMyBlog);
   // console.log(blog);
 
+  const blogSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: blog?.title,
+    description: blog?.content?.slice(0, 150),
+    image: blog?.img,
+    author: {
+      "@type": "Person",
+      name: blog?.author?.userName,
+    },
+    datePublished: blog?.createdAt,
+    dateModified: blog?.updatedAt,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": window.location.href,
+    },
+  };
+
   return (
     <>
       <Helmet>
@@ -95,7 +113,10 @@ export default function BlogDetails() {
         {/* Open Graph */}
         <meta property="og:title" content={blog.title} />
         <meta property="og:description" content={blog.content?.slice(0, 150)} />
-        <meta property="og:image" content={blog.img} />
+        <meta
+          property="og:image"
+          content={blog.img ? blog.img : "blog_no_img"}
+        />
         <meta property="og:type" content="article" />
 
         {/* Twitter */}
@@ -104,32 +125,19 @@ export default function BlogDetails() {
           name="twitter:description"
           content={blog.content?.slice(0, 150)}
         />
-        <meta name="twitter:image" content={blog.img} />
+        <meta
+          name="twitter:image"
+          content={blog.img ? blog.img : "blog_no_img"}
+        />
 
         {/* ✅ JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BlogPosting",
-              headline: blog?.title,
-              description: blog?.content?.slice(0, 150),
-              image: blog?.img,
-              author: {
-                "@type": "Person",
-                name: blog?.author?.userName,
-              },
-              datePublished: blog?.createdAt,
-              dateModified: blog?.updatedAt,
-              mainEntityOfPage: {
-                "@type": "WebPage",
-                "@id": window.location.href,
-              },
-            }),
-          }}
-        />
       </Helmet>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(blogSchema),
+        }}
+      />
 
       <div className="flex flex-col md:flex-row gap-6 p-5 create-page ">
         {/* Left Section - Blog List */}
